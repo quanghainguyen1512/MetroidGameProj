@@ -1,5 +1,7 @@
 #include<Windows.h>
 #include<iostream>
+#include"Game.h"
+
 using namespace std;
 
 bool GenerationWindow(HINSTANCE hInstance, int nCmdShow, LPCSTR className, LPCSTR WindowTitle, int width, int height, HWND& hWnd);
@@ -14,6 +16,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wPrama, LPARAM lPara
 #define CLASSNAME "GameScene"
 #define TILE "Metroid1984 Remaster"
 
+Game *game;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -21,29 +24,35 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (GenerationWindow(hInstance, nCmdShow, CLASSNAME, TILE, WINDOW_WIDTH, WINDOW_HEIGHT, hWnd))
 	{
 		MSG msg;
+
 		int done = 0;
 		DWORD frame_start = GetTickCount();
 		DWORD tick_per_frame = 1000 / 30;                 //30fps 
 
-		while (!done)
+		game = new Game();
+		if (game->Initialize(hWnd, hInstance, WINDOW_WIDTH, WINDOW_HEIGHT))
 		{
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			while (!done)
 			{
-				if (msg.message == WM_QUIT)
-					done = 1;
+				if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					if (msg.message == WM_QUIT)
+						done = 1;
 
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
 
+				}
+				DWORD now = GetTickCount();
+				DWORD _DeltaTime = now - frame_start;
+				if (_DeltaTime >= tick_per_frame)
+				{
+					frame_start = now;
+					game->Draw(frame_start);
+				}
 			}
-			DWORD now = GetTickCount();
-			DWORD _DeltaTime = now - frame_start;
-			if (_DeltaTime >= tick_per_frame)
-			{
-				frame_start = now;
-			}
+			return msg.wParam;
 		}
-		return msg.wParam;
 	}
 	return 0;
 }
