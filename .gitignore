@@ -20,7 +20,7 @@
 *.tar
 *.zip
 *.db
-
+*.opendb
 # Logs and databases #
 ######################
 *.log
