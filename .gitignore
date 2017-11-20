@@ -21,6 +21,8 @@
 *.zip
 *.db
 *.opendb
+*.ipch
+
 # Logs and databases #
 ######################
 *.log
