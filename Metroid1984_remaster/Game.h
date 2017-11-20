@@ -3,6 +3,7 @@
 
 #include"GraphicDevice.h"
 #include<dinput.h>
+#include"GamePlayObject.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -24,6 +25,8 @@ private:
 	int _height;
 
 	float _gameTime;
+
+	GameObject* GO;
 
 };
 
