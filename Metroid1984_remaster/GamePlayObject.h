@@ -4,8 +4,8 @@
 #define _USER_MATH_DEFINES
 #include<cmath>
 #include<math.h>
+#include<d3dx9.h>
 #include<string>
-#include"GameSprite.h"
 
 enum class ObjectStatus{ Active, Dying, Dead };
 
@@ -17,7 +17,7 @@ public:
 	GameObject(float x, float y, float rotation, float speed, float maxSpeed);
 	~GameObject();
 
-	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
+	virtual bool Initialize(LPDIRECT3DDEVICE9 device, std::string file);
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime);
 
@@ -27,6 +27,10 @@ public:
 
 protected:
 
+	// infomational data
+	std::string name;
+	std::string Description;
+
 	//physics data
 	D3DXVECTOR3 position;
 	D3DXVECTOR3 velocity;
@@ -35,8 +39,6 @@ protected:
 	ObjectStatus status;
 private:
 	float _MaxSpeed;
-
-	GameSprite* _Gs;
 
 };
 
