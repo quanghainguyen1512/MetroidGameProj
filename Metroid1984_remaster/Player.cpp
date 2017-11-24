@@ -9,10 +9,14 @@ GameObject(x, y, rotation, speed, maxSpeed)
 bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 {
 	status = ObjectStatus::Active;
+
+	if (!CreateTexture(device, FILE))
+		return false;
+
 	if (!Right_move)
 	{
 		Right_move = new GameSprite();
-		if (!Right_move->initialize(device, FILE, RIGHT_MOVE_X, RIGHT_MOVE_Y, NORMAL_WIDTH, NORMAL_HEIGHT, RUN_COUNT))
+		if (!Right_move->initialize(device, tex, RIGHT_MOVE_X, RIGHT_MOVE_Y, NORMAL_WIDTH, NORMAL_HEIGHT, RUN_COUNT))
 		{
 			return false;
 		}
@@ -21,7 +25,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_move)
 	{
 		Left_move = new GameSprite();
-		if (!Left_move->initialize(device, FILE, LEFT_MOVE_X, LEFT_MOVE_Y, NORMAL_WIDTH, NORMAL_HEIGHT, RUN_COUNT))
+		if (!Left_move->initialize(device, tex, LEFT_MOVE_X, LEFT_MOVE_Y, NORMAL_WIDTH, NORMAL_HEIGHT, RUN_COUNT))
 		{
 			return false;
 		}
@@ -30,7 +34,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Right_jump)
 	{
 		Right_jump = new GameSprite();
-		if (!Right_jump->initialize(device, FILE, RIGHT_JUMP_X, RIGHT_JUMP_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_COUNT))
+		if (!Right_jump->initialize(device, tex, RIGHT_JUMP_X, RIGHT_JUMP_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_COUNT))
 		{
 			return false;
 		}
@@ -38,7 +42,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_jump)
 	{
 		Left_jump = new GameSprite();
-		if (!Left_jump->initialize(device, FILE, LEFT_JUMP_X, LEFT_JUMP_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_COUNT))
+		if (!Left_jump->initialize(device, tex, LEFT_JUMP_X, LEFT_JUMP_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_COUNT))
 		{
 			return false;
 		}
@@ -46,7 +50,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Right_jump_spin)
 	{
 		Right_jump_spin = new GameSprite();
-		if (!Right_jump_spin->initialize(device, FILE, RIGHT_JUMP_SPIN_X, RIGHT_JUMP_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_SPIN_COUNT))
+		if (!Right_jump_spin->initialize(device, tex, RIGHT_JUMP_SPIN_X, RIGHT_JUMP_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -54,7 +58,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_jump_spin)
 	{
 		Left_jump_spin = new GameSprite();
-		if (!Left_jump_spin->initialize(device, FILE, LEFT_JUMP_SPIN_X, LEFT_JUMP_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_SPIN_COUNT))
+		if (!Left_jump_spin->initialize(device, tex, LEFT_JUMP_SPIN_X, LEFT_JUMP_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -62,7 +66,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Right_ground_spin)
 	{
 		Right_ground_spin = new GameSprite();
-		if (!Right_ground_spin->initialize(device, FILE, RIGHT_GROUND_SPIN_X, RIGHT_GROUND_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, GROUND_SPIN_COUNT))
+		if (!Right_ground_spin->initialize(device, tex, RIGHT_GROUND_SPIN_X, RIGHT_GROUND_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, GROUND_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -70,7 +74,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_ground_spin)
 	{
 		Left_ground_spin = new GameSprite();
-		if (!Left_ground_spin->initialize(device, FILE, LEFT_GROUND_SPIN_X, LEFT_GROUND_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, GROUND_SPIN_COUNT))
+		if (!Left_ground_spin->initialize(device, tex, LEFT_GROUND_SPIN_X, LEFT_GROUND_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, GROUND_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -78,7 +82,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Right_stand)
 	{
 		Right_stand = new GameSprite();
-		if (!Right_stand->initialize(device, FILE, RIGHT_STAND_X, RIGHT_STAND_Y, NORMAL_WIDTH, NORMAL_HEIGHT, STAND_COUNT))
+		if (!Right_stand->initialize(device, tex, RIGHT_STAND_X, RIGHT_STAND_Y, NORMAL_WIDTH, NORMAL_HEIGHT, STAND_COUNT))
 		{
 			return false;
 		}
@@ -87,13 +91,48 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_stand)
 	{
 		Left_stand = new GameSprite();
-		if (!Left_stand->initialize(device, FILE, LEFT_STAND_X, LEFT_STAND_Y, NORMAL_WIDTH, NORMAL_HEIGHT, STAND_COUNT))
+		if (!Left_stand->initialize(device, tex, LEFT_STAND_X, LEFT_STAND_Y, NORMAL_WIDTH, NORMAL_HEIGHT, STAND_COUNT))
 		{
 			return false;
 		}
 	}
 
 	Is_initialzed = true;
+
+	return true;
+}
+
+bool Player::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
+{
+	D3DXIMAGE_INFO info;
+	HRESULT result = D3DXGetImageInfoFromFile(file.c_str(), &info);
+
+	if (!SUCCEEDED(D3DXCreateTextureFromFileEx(
+		device,
+		file.c_str(),
+		info.Width,
+		info.Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(0, 0, 0),
+		&info,
+		NULL,
+		&tex)))
+	{
+		std::string s = "Make sure the file exist and path is right. Requested Image: " + file;
+		MessageBox(NULL, s.c_str(), NULL, NULL);
+		return false;
+	}
+
+	/*if (!SUCCEEDED(D3DXCreateSprite(device, &sprite)))
+	{
+		MessageBox(NULL, "file not found", NULL, NULL);
+		return false;
+	}*/
 
 	return true;
 }

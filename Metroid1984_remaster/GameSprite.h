@@ -12,14 +12,14 @@ public:
 	GameSprite();
 	~GameSprite();
 
-	bool initialize(LPDIRECT3DDEVICE9 device, std::string file, int XInTexture, int YInTexture, int width, int height, int count);
+	bool initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 tex, int XInTexture, int YInTexture, int width, int height, int count);
 	bool IsInitialize();
 
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime, D3DXVECTOR3 position);
 
 private:
-	LPDIRECT3DTEXTURE9 tex;
+	LPDIRECT3DTEXTURE9 _tex;
 	LPD3DXSPRITE sprite;
 	D3DCOLOR color;
 	bool initialized;
