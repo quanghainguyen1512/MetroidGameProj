@@ -4,6 +4,7 @@
 #include"GraphicDevice.h"
 #include<dinput.h>
 #include"GamePlayObject.h"
+#include"Player.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -26,7 +27,8 @@ private:
 
 	float _gameTime;
 
-	GameObject* GO;
+	//GameObject* GO;
+	Player* player;
 
 };
 

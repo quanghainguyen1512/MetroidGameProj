@@ -6,6 +6,7 @@
 #include<math.h>
 #include<string>
 #include"GameSprite.h"
+#include"DataSet.h"
 
 enum class ObjectStatus{ Active, Dying, Dead };
 
