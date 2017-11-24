@@ -61,7 +61,7 @@ void GameSprite::Draw(float gameTime, D3DXVECTOR3 position)
 		srect.right = srect.left + _width;
 		srect.bottom = srect.top + _height;
 
-		sprite->Begin(D3DXSPRITE_ALPHABLEND);
+		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 		sprite->Draw(_tex, &srect, NULL, &position, color);
 		sprite->End();
 	}

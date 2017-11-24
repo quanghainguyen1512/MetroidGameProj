@@ -13,7 +13,7 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	player = new Player(0, 0, 0, 0.15f, 0.15f);
+	player = new Player(514, 3265, 0, 0.15f, 0.15f);
 	if (!player->Initialize(gDevice->device))
 	{
 		return false;
@@ -22,6 +22,8 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 	keyBoard = new KeyBoard();
 	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
 		return false;
+
+	camera = new Camera(width, height, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	_width = width;
 	_height = height;
@@ -40,6 +42,8 @@ void Game::Run(float gameTime)
 void Game::Update(float gameTime)
 {
 	_gameTime = gameTime;
+	camera->Follow(player);
+	camera->Update();
 	player->Update(gameTime);
 }
 
@@ -47,6 +51,11 @@ void Game::Draw(float gameTime)
 {
 	gDevice->Clear(D3DCOLOR_XRGB(0, 0, 0));
 	gDevice->Begin();
+
+	if (camera)
+	{
+		camera->SetTransform(gDevice);
+	}
 
 	if (player)
 		player->Draw(gameTime);
@@ -87,6 +96,12 @@ Game::~Game()
 	{
 		delete gDevice;
 		gDevice = nullptr;
+	}
+
+	if (camera)
+	{
+		delete camera;
+		camera = nullptr;
 	}
 
 }
