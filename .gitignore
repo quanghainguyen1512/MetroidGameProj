@@ -20,6 +20,7 @@
 *.tar
 *.zip
 *.db
+<<<<<<< HEAD
 *.ipch
 
 # Visual C++ cache files
@@ -32,7 +33,11 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
-
+*.idb
+*.obj
+=======
+*.opendb
+>>>>>>> origin/Duong
 # Logs and databases #
 ######################
 *.log
@@ -51,3 +56,4 @@ Thumbs.db
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+Debug/
