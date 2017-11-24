@@ -65,12 +65,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GamePlayObject.cpp" />
+    <ClCompile Include="GameSprite.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />
+    <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataSet.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GamePlayObject.h" />
+    <ClInclude Include="GameSprite.h" />
     <ClInclude Include="GraphicDevice.h" />
+    <ClInclude Include="KeyBoard.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

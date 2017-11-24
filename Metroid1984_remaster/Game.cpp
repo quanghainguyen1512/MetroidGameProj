@@ -13,11 +13,15 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	player = new Player(0, 0, 0, 100.0f, 100.0f);
+	player = new Player(0, 0, 0, 0.15f, 0.15f);
 	if (!player->Initialize(gDevice->device))
 	{
 		return false;
 	}
+
+	keyBoard = new KeyBoard();
+	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
+		return false;
 
 	_width = width;
 	_height = height;
@@ -50,6 +54,27 @@ void Game::Draw(float gameTime)
 	gDevice->End();
 	gDevice->Present();
 }
+
+void Game::ProcessController(HWND hWnd)
+{
+	keyBoard->ProcessKeyBoard(hWnd);
+	ProcessInput();
+}
+
+void Game::ProcessInput()
+{
+	if (keyBoard->IsKeyDown(DIK_LEFT))
+		player->ProcessKey(LEFT_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_RIGHT))
+		player->ProcessKey(RIGHT_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_UP))
+		player->ProcessKey(UP_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_DOWN))
+		player->ProcessKey(DOWN_ARROW);
+	else
+		player->ProcessKey(UNKEY);
+}
+
 Game::~Game()
 {
 	if (player)

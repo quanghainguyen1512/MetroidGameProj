@@ -1,5 +1,13 @@
 #include<string>
 
+
+//Control
+#define LEFT_ARROW 1
+#define RIGHT_ARROW 2
+#define UP_ARROW 3
+#define DOWN_ARROW 4
+#define UNKEY 0
+
 //Character movement Sprite
 #define FILE "Metroid_sprite_motion_2.png"
 
