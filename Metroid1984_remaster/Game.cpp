@@ -13,6 +13,20 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
+	player = new Player(0, 0, 0, 0.15f, 0.15f);
+	if (!player->Initialize(gDevice->device))
+	{
+		return false;
+	}
+
+	keyBoard = new KeyBoard();
+	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
+		return false;
+
+	_width = width;
+	_height = height;
+
+
 	return true;
 }
 
@@ -26,20 +40,53 @@ void Game::Run(float gameTime)
 void Game::Update(float gameTime)
 {
 	_gameTime = gameTime;
+	player->Update(gameTime);
 }
 
 void Game::Draw(float gameTime)
 {
-	gDevice->Clear(D3DCOLOR_XRGB(0, 100, 100));
+	gDevice->Clear(D3DCOLOR_XRGB(0, 0, 0));
 	gDevice->Begin();
+
+	if (player)
+		player->Draw(gameTime);
+
 	gDevice->End();
 	gDevice->Present();
 }
+
+void Game::ProcessController(HWND hWnd)
+{
+	keyBoard->ProcessKeyBoard(hWnd);
+	ProcessInput();
+}
+
+void Game::ProcessInput()
+{
+	if (keyBoard->IsKeyDown(DIK_LEFT))
+		player->ProcessKey(LEFT_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_RIGHT))
+		player->ProcessKey(RIGHT_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_UP))
+		player->ProcessKey(UP_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_DOWN))
+		player->ProcessKey(DOWN_ARROW);
+	else
+		player->ProcessKey(UNKEY);
+}
+
 Game::~Game()
 {
+	if (player)
+	{
+		delete player;
+		player = nullptr;
+	}
+
 	if (gDevice)
 	{
 		delete gDevice;
 		gDevice = nullptr;
 	}
+
 }

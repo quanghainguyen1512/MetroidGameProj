@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		int done = 0;
 		DWORD frame_start = GetTickCount();
-		DWORD tick_per_frame = 1000 / 30;                 //30fps 
+		DWORD tick_per_frame = 1000 / 18;                 //18fps 
 
 		game = new Game();
 		if (game->Initialize(hWnd, hInstance, WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -48,9 +48,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (_DeltaTime >= tick_per_frame)
 				{
 					frame_start = now;
-					game->Draw(frame_start);
+					game->Run(_DeltaTime);
 				}
+
+				game->ProcessController(hWnd);
 			}
+
+			delete game;
 			return msg.wParam;
 		}
 	}
@@ -73,7 +77,7 @@ bool GenerationWindow(HINSTANCE hInstance, int nCmdShow, LPCSTR className, LPCST
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wcex.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wcex.lpszClassName = className;
 	wcex.hIconSm = LoadIcon(NULL, IDI_WINLOGO);
 
