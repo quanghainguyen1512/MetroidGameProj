@@ -13,8 +13,8 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	GO = new GameObject(0, 0, 0, 100.0f, 100.0f);
-	if (!GO->Initialize(gDevice->device))
+	player = new Player(0, 0, 0, 100.0f, 100.0f);
+	if (!player->Initialize(gDevice->device))
 	{
 		return false;
 	}
@@ -36,7 +36,7 @@ void Game::Run(float gameTime)
 void Game::Update(float gameTime)
 {
 	_gameTime = gameTime;
-	GO->Update(gameTime);
+	player->Update(gameTime);
 }
 
 void Game::Draw(float gameTime)
@@ -44,18 +44,18 @@ void Game::Draw(float gameTime)
 	gDevice->Clear(D3DCOLOR_XRGB(0, 0, 0));
 	gDevice->Begin();
 
-	if (GO)
-		GO->Draw(gameTime);
+	if (player)
+		player->Draw(gameTime);
 
 	gDevice->End();
 	gDevice->Present();
 }
 Game::~Game()
 {
-	if (GO)
+	if (player)
 	{
-		delete GO;
-		GO = nullptr;
+		delete player;
+		player = nullptr;
 	}
 
 	if (gDevice)
