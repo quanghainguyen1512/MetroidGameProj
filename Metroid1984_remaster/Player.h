@@ -19,10 +19,6 @@ public:
 	void OnKeyUp(int keyCode);
 	void ProcessKey(int keyDown);
 
-	void OnKeyDown(int keyCode);
-	void OnKeyUp(int keyCode);
-	void ProcessKey(int keyDown);
-
 	bool InitializeFlag();
 	D3DXVECTOR3 GetPosition();
 
