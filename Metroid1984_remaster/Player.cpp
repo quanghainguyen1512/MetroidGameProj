@@ -221,3 +221,47 @@ D3DXVECTOR3 Player::GetPosition()
 {
 	return position;
 }
+
+void Player::OnKeyDown(int keyCode)
+{
+
+}
+
+void Player::OnKeyUp(int keyCode)
+{
+
+}
+
+void Player::ProcessKey(int keyDown)
+{
+	switch (keyDown)
+	{
+	case LEFT_ARROW:
+	{
+		direction = -1;
+		last_direction = direction;
+	}break;
+	case RIGHT_ARROW:
+	{
+		direction = 1;
+		last_direction = direction;
+	}break;
+	case UP_ARROW:
+	{
+		Is_ground_spin = false;
+	}break;
+	case DOWN_ARROW:
+	{
+		Is_ground_spin = true;
+	}break;
+	case UNKEY:
+	{
+		direction = 0;
+	}
+	default:
+	{
+
+	}
+	break;
+	}
+}

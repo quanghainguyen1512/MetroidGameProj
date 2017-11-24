@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		int done = 0;
 		DWORD frame_start = GetTickCount();
-		DWORD tick_per_frame = 1000 / 10;                 //10fps 
+		DWORD tick_per_frame = 1000 / 18;                 //18fps 
 
 		game = new Game();
 		if (game->Initialize(hWnd, hInstance, WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -50,6 +50,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					frame_start = now;
 					game->Run(_DeltaTime);
 				}
+
+				game->ProcessController(hWnd);
 			}
 
 			delete game;
