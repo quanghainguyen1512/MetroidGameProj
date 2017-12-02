@@ -29,26 +29,15 @@ GameObject::GameObject(float x, float y, float rotation, float speed, float maxS
 
 bool GameObject::Initialize(LPDIRECT3DDEVICE9 device)
 {
-	status = ObjectStatus::Active;
-	_Gs = new GameSprite();
-	if (!_Gs->initialize(device,"Metroid_sprite_motion_2.png", 0, 0, 25, 38, 3))
-	{
-		return false;
-	}
-
 	return true;
 }
 
 void GameObject::Update(float gameTime)
 {
-	if (status == ObjectStatus::Active)
-		_Gs->Update(gameTime);
 }
 
 void GameObject::Draw(float gameTime)
 {
-	if (_Gs)
-		_Gs->Draw(gameTime, position);
 }
 
 ObjectStatus GameObject::GetStatus() const

@@ -12,6 +12,8 @@ public:
 	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime);
+	
+	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	void OnKeyDown(int keyCode);
 	void OnKeyUp(int keyCode);
@@ -21,6 +23,9 @@ public:
 	D3DXVECTOR3 GetPosition();
 
 protected:
+
+	LPDIRECT3DTEXTURE9 tex;
+
 	GameSprite* Right_move;
 	GameSprite* Left_move;
 	GameSprite* Right_jump;
