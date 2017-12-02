@@ -67,6 +67,22 @@ void GameSprite::Draw(float gameTime, D3DXVECTOR3 position)
 	}
 }
 
+void GameSprite::Draw(int XInTexture, int yInTexture, int width, int height, D3DXVECTOR3 position)
+{
+	if (sprite && _tex)
+	{
+		RECT srect;
+		srect.left = XInTexture;
+		srect.top = yInTexture;
+		srect.right = srect.left + _width;
+		srect.bottom = srect.top + _height;
+
+		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+		sprite->Draw(_tex, &srect, NULL, &position, color);
+		sprite->End();
+	}
+}
+
 GameSprite::~GameSprite()
 {
 	if (sprite)
@@ -74,9 +90,9 @@ GameSprite::~GameSprite()
 		sprite->Release();
 		sprite = 0;
 	}
-	if (_tex)
+	/*if (_tex)
 	{
 		_tex->Release();
 		_tex = 0;
-	}
+	}*/
 }

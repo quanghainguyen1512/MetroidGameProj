@@ -25,6 +25,7 @@ GameObject::GameObject(float x, float y, float rotation, float speed, float maxS
 	velocity.z = 0;
 
 	_MaxSpeed = maxSpeed;
+	tex = 0;
 }
 
 bool GameObject::Initialize(LPDIRECT3DDEVICE9 device)
@@ -38,6 +39,11 @@ void GameObject::Update(float gameTime)
 
 void GameObject::Draw(float gameTime)
 {
+}
+
+bool GameObject::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
+{
+	return true;
 }
 
 ObjectStatus GameObject::GetStatus() const
@@ -61,5 +67,10 @@ GameObject::~GameObject()
 	{
 		delete _Gs;
 		_Gs = nullptr;
+	}
+	if (tex)
+	{
+		tex->Release();
+		tex = 0;
 	}
 }

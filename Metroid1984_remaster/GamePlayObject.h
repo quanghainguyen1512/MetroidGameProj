@@ -21,6 +21,7 @@ public:
 	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime);
+	virtual bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	ObjectStatus GetStatus() const;
 
@@ -28,6 +29,7 @@ public:
 
 protected:
 
+	LPDIRECT3DTEXTURE9 tex;
 	//physics data
 	D3DXVECTOR3 position;
 	D3DXVECTOR3 velocity;
