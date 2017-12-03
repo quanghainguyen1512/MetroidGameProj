@@ -4,18 +4,14 @@
 #include<iostream>
 #include<fstream>
 #include<string>
-<<<<<<< HEAD
-=======
-#include"Field.h"
->>>>>>> TheAnh
 
 using namespace std;
 
-class Map :public GameObject
+class Field :public GameObject
 {
 public:
-	Map(float x, float y, float rotation, float speed, float maxSpeed);
-	~Map();
+	Field(float x, float y, float rotation, float speed, float maxSpeed, std::string file,LPDIRECT3DTEXTURE9 SourceTex);
+	~Field();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
 	void Update(float gameTime);
@@ -26,23 +22,12 @@ public:
 
 	void setLimitation(int x, int y, int width, int height);
 
+	bool Build_brick(LPDIRECT3DDEVICE9 device);
+	void Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld);
 protected:
-<<<<<<< HEAD
 	vector<Coordinate* > Positions;
-	bool Build_brick(LPDIRECT3DDEVICE9 device);
-	void Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld);
-	int numberOfBrick = 0;
-	GameSprite* brick;
-=======
-	Field* field1;
-	Field* field2;
-	Field* field3;
-	Field* field4;
-
-	bool Build_brick(LPDIRECT3DDEVICE9 device);
-	void Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld);
 	
->>>>>>> TheAnh
+	GameSprite* brick;
 	LPDIRECT3DDEVICE9 graphic;
 
 	int _start_x;
@@ -50,15 +35,6 @@ protected:
 	int _limit_width;
 	int _limit_height;
 
-	int _player_x;
-	int _player_y;
-	int _Player_height;
-	int _Player_width;
+	std::string fileName;
 
-	bool setComplete;
-<<<<<<< HEAD
-=======
-
-	int field_flag;
->>>>>>> TheAnh
 };

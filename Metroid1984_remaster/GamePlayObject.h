@@ -27,6 +27,8 @@ public:
 
 	void SetSpeed(float speed);
 
+	D3DXVECTOR3 getPosition();
+
 protected:
 
 	LPDIRECT3DTEXTURE9 tex;

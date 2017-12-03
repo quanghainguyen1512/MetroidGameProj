@@ -61,6 +61,11 @@ void GameObject::SetSpeed(float speed)
 		velocity.z = 0;
 	}
 }
+
+D3DXVECTOR3 GameObject::getPosition()
+{
+	return position;
+}
 GameObject::~GameObject()
 {
 	if (_Gs)
