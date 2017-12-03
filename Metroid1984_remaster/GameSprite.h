@@ -17,6 +17,7 @@ public:
 
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime, D3DXVECTOR3 position);
+	void Draw(int XInTexture, int yInTexture, int width, int height, D3DXVECTOR3 position);
 
 private:
 	LPDIRECT3DTEXTURE9 _tex;

@@ -6,6 +6,9 @@
 #include"GamePlayObject.h"
 #include"Player.h"
 #include"KeyBoard.h"
+#include"Camera.h"
+#include"BackGround.h"
+#include"Map.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -20,6 +23,7 @@ public:
 	void Update(float gameTime);
 	void Draw(float gameTime);
 
+	void DrawMap();
 	void ProcessController(HWND hWnd);
 	void ProcessInput();
 
@@ -31,11 +35,15 @@ private:
 
 	float _gameTime;
 
-	//GameObject* GO;
 	Player* player;
 
 	KeyBoard* keyBoard;
 
+	Camera* camera;
+
+	//BackGround* backGround;
+
+	Map* map;
 };
 
 #endif GAME_H

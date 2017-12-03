@@ -127,13 +127,6 @@ bool Player::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
 		MessageBox(NULL, s.c_str(), NULL, NULL);
 		return false;
 	}
-
-	/*if (!SUCCEEDED(D3DXCreateSprite(device, &sprite)))
-	{
-		MessageBox(NULL, "file not found", NULL, NULL);
-		return false;
-	}*/
-
 	return true;
 }
 
@@ -177,8 +170,6 @@ void Player::Update(float gameTime)
 				Left_stand->Update(gameTime);
 		}
 	}
-
-	//Right_move->Update(gameTime);
 }
 
 void Player::Draw(float gameTime)
@@ -209,7 +200,6 @@ void Player::Draw(float gameTime)
 		else if (Is_stand == true)
 			Left_stand->Draw(gameTime, position);
 	}
-	//Right_move->Draw(gameTime, position);
 }
 
 Player::~Player()

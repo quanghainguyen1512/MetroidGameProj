@@ -50,8 +50,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					frame_start = now;
 					game->Run(_DeltaTime);
 				}
-
+				Sleep(_DeltaTime/2);
 				game->ProcessController(hWnd);
+				
 			}
 
 			delete game;

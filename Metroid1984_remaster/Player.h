@@ -9,10 +9,9 @@ public:
 	Player(float x, float y, float rotation, float speed, float maxSpeed);
 	~Player();
 
-	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
-	virtual void Update(float gameTime);
-	virtual void Draw(float gameTime);
-	
+	bool Initialize(LPDIRECT3DDEVICE9 device);
+	void Update(float gameTime);
+	void Draw(float gameTime);
 	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	void OnKeyDown(int keyCode);
@@ -23,8 +22,6 @@ public:
 	D3DXVECTOR3 GetPosition();
 
 protected:
-
-	LPDIRECT3DTEXTURE9 tex;
 
 	GameSprite* Right_move;
 	GameSprite* Left_move;
