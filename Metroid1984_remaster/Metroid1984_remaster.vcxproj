@@ -71,6 +71,8 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -85,6 +87,8 @@
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="DataSet.h" />
     <ClInclude Include="Field.h" />

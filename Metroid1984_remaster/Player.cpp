@@ -1,9 +1,9 @@
 #include"Player.h"
 
-Player::Player(float x, float y, float rotation, float speed, float maxSpeed) :
-GameObject(x, y, rotation, speed, maxSpeed)
+Player::Player(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager)
 {
-
+	velocity.y = 0.15f;
 }
 
 bool Player::Initialize(LPDIRECT3DDEVICE9 device)
@@ -58,7 +58,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Left_jump_spin)
 	{
 		Left_jump_spin = new GameSprite();
-		if (!Left_jump_spin->initialize(device, tex, LEFT_JUMP_SPIN_X, LEFT_JUMP_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, JUMP_SPIN_COUNT))
+		if (!Left_jump_spin->initialize(device, tex, LEFT_JUMP_SPIN_X, LEFT_JUMP_SPIN_Y, NORMAL_WIDTH, GSPIN_SIZE, JUMP_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -66,7 +66,7 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	if (!Right_ground_spin)
 	{
 		Right_ground_spin = new GameSprite();
-		if (!Right_ground_spin->initialize(device, tex, RIGHT_GROUND_SPIN_X, RIGHT_GROUND_SPIN_Y, NORMAL_WIDTH, NORMAL_HEIGHT, GROUND_SPIN_COUNT))
+		if (!Right_ground_spin->initialize(device, tex, RIGHT_GROUND_SPIN_X, RIGHT_GROUND_SPIN_Y, NORMAL_WIDTH, GSPIN_SIZE, GROUND_SPIN_COUNT))
 		{
 			return false;
 		}
@@ -98,7 +98,8 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 	}
 
 	Is_initialzed = true;
-
+	spriteID = 4; 
+	ActionID = 2;
 	return true;
 }
 
@@ -139,36 +140,124 @@ void Player::Update(float gameTime)
 {
 	if (status == ObjectStatus::Active)
 	{
+		float tempx = position.x;
+		float tempy = position.y;
 
-		position.x += velocity.x*(gameTime)*direction;
-		position.y += velocity.y*(gameTime);
+		tempx += velocity.x*(gameTime)*direction;
+		tempy += velocity.y*(gameTime);
 		position.z = 0;
 		if (last_direction == 1)
 		{
 			if (Is_jump == true)
+			{
 				Right_jump->Update(gameTime);
+				spriteID = 0;
+				ActionID = 2;
+				spriteWidth = 23;
+				spriteHeight = 25;
+				Is_air = true;
+			}
 			else if (Is_fall == true && direction != 0)
+			{
 				Right_jump_spin->Update(gameTime);
+				spriteID = 1;
+				ActionID = 2;
+				spriteWidth = 19;
+				spriteHeight = 19;
+				Is_air = true;
+			}
 			else if (Is_ground_spin == true)
+			{
 				Right_ground_spin->Update(gameTime);
+				spriteID = 2;
+				ActionID = 0;
+				spriteWidth = 13;
+				spriteHeight = 13;
+			}
 			else if (direction != 0)
+			{
 				Right_move->Update(gameTime);
+				spriteID = 3;
+				ActionID = 0;
+				spriteWidth = 14;
+				spriteHeight =20;
+			}
 			else if (Is_stand == true)
+			{
 				Right_stand->Update(gameTime);
+				spriteID = 4;
+				ActionID = 3;
+				spriteWidth = 14;
+				spriteHeight = 20;
+			}
 		}
 		if (last_direction == -1)
 		{
 			if (Is_jump == true)
+			{
 				Left_jump->Update(gameTime);
+				spriteID = 0;
+				ActionID = 2;
+				spriteWidth = 23;
+				spriteHeight = 25;
+				Is_air = true;
+			}
 			else if (Is_fall == true && direction != 0)
+			{
 				Left_jump_spin->Update(gameTime);
+				spriteID = 1;
+				ActionID = 2;
+				spriteWidth = 19;
+				spriteHeight = 19;
+				Is_air = true;
+			}
 			else if (Is_ground_spin == true)
+			{
 				Left_ground_spin->Update(gameTime);
+				spriteID = 2;
+				ActionID = 1;
+				spriteWidth = 13;
+				spriteHeight = 13;
+			}
 			else if (direction != 0)
+			{
 				Left_move->Update(gameTime);
+				spriteID = 3;
+				ActionID = 1;
+				spriteWidth = 14;
+				spriteHeight = 20;
+			}
 			else if (Is_stand == true)
+			{
 				Left_stand->Update(gameTime);
+				spriteID = 4;
+				ActionID = 3;
+				spriteWidth = 14;
+				spriteHeight = 20;
+			}
 		}
+		_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*direction, velocity.y);
+
+		float remainTimeX = _collisionManager->RemainXtime(position.x, velocity.x*direction);
+		float remainTimeY = _collisionManager->RemainYtime(position.y, velocity.y);
+		
+		if (remainTimeX > 0)
+			position.x += velocity.x*(gameTime - remainTimeX)*direction;
+			//position.x -= velocity.x*(gameTime)*direction;
+		else
+			position.x += velocity.x*(gameTime)*direction;
+		
+		if (remainTimeY > 0)
+			position.y += velocity.y*(gameTime - remainTimeY);
+			//position.y -= velocity.y*(gameTime);
+		else
+			position.y += velocity.y*(gameTime);
+
+		/*position.x += velocity.x*(gameTime - remainTimeX)*direction;
+		position.y += velocity.y*(gameTime - remainTimeY);*/
+
+
+		_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*direction, velocity.y);
 	}
 }
 
@@ -176,29 +265,70 @@ void Player::Draw(float gameTime)
 {
 	if (last_direction == 1)
 	{
-		if (Is_jump == true)
+		switch (spriteID)
+		{
+		case 0:
+		{
 			Right_jump->Draw(gameTime, position);
-		else if (Is_fall == true && direction != 0)
+			break;
+		}
+		case 1:
+		{
 			Right_jump_spin->Draw(gameTime, position);
-		else if (Is_ground_spin == true)
+			break;
+		}
+		case 2:
+		{
 			Right_ground_spin->Draw(gameTime, position);
-		else if (direction != 0)
+			break;
+		}
+		case 3:
+		{
 			Right_move->Draw(gameTime, position);
-		else if (Is_stand == true)
+			break;
+		}
+		case 4:
+		{
 			Right_stand->Draw(gameTime, position);
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	if (last_direction == -1)
 	{
-		if (Is_jump == true)
+		switch (spriteID)
+		{
+
+		case 0:
+		{
 			Left_jump->Draw(gameTime, position);
-		else if (Is_fall == true && direction != 0)
+			break;
+		}
+		case 1:
+		{
 			Left_jump_spin->Draw(gameTime, position);
-		else if (Is_ground_spin == true)
+			break;
+		}
+		case 2:
+		{
 			Left_ground_spin->Draw(gameTime, position);
-		else if (direction != 0)
+			break;
+		}
+		case 3:
+		{
 			Left_move->Draw(gameTime, position);
-		else if (Is_stand == true)
+			break;
+		}
+		case 4:
+		{
 			Left_stand->Draw(gameTime, position);
+			break;
+		}
+		default:
+			break;
+		}
 	}
 }
 
@@ -277,11 +407,19 @@ void Player::ProcessKey(int keyDown)
 	}break;
 	case UP_ARROW:
 	{
-		Is_ground_spin = false;
+		if (Is_ground_spin != false)
+		{
+			Is_ground_spin = false;
+			position.y = position.y - 20;
+		}
 	}break;
 	case DOWN_ARROW:
 	{
-		Is_ground_spin = true;
+		if (Is_ground_spin != true)
+		{
+			Is_ground_spin = true;
+			position.y = position.y + 20;
+		}
 	}break;
 	case UNKEY:
 	{

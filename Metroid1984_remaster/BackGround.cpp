@@ -1,7 +1,7 @@
 #include"BackGround.h"
 
-BackGround::BackGround(float x, float y, float rotation, float speed, float maxSpeed) :
-GameObject(x, y, rotation, speed, maxSpeed)
+BackGround::BackGround(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager)
 {
 
 }

@@ -10,7 +10,7 @@ using namespace std;
 class Field :public GameObject
 {
 public:
-	Field(float x, float y, float rotation, float speed, float maxSpeed, std::string file,LPDIRECT3DTEXTURE9 SourceTex);
+	Field(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, std::string file, LPDIRECT3DTEXTURE9 SourceTex);
 	~Field();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);

@@ -9,6 +9,7 @@
 #include"Camera.h"
 #include"BackGround.h"
 #include"Map.h"
+#include"CollisionManager.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -44,6 +45,8 @@ private:
 	//BackGround* backGround;
 
 	Map* map;
+
+	CollisionManager* collisionManager;
 };
 
 #endif GAME_H

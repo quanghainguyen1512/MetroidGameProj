@@ -7,6 +7,7 @@
 #include<string>
 #include"GameSprite.h"
 #include"DataSet.h"
+#include"CollisionManager.h"
 
 enum class ObjectStatus{ Active, Dying, Dead };
 
@@ -15,7 +16,7 @@ const float pi = 3.14159265359;
 class GameObject
 {
 public:
-	GameObject(float x, float y, float rotation, float speed, float maxSpeed);
+	GameObject(float x, float y, float rotation, float speed, float maxSpeed,CollisionManager* collisionManager);
 	~GameObject();
 
 	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
@@ -38,6 +39,8 @@ protected:
 	float _rotation;
 	float _speed;
 	ObjectStatus status;
+
+	CollisionManager* _collisionManager;
 private:
 	float _MaxSpeed;
 

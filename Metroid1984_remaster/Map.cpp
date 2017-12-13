@@ -2,8 +2,8 @@
 
 using namespace std;
 
-Map::Map(float x, float y, float rotation, float speed, float maxSpeed) :
-GameObject(x, y, rotation, speed, maxSpeed)
+Map::Map(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager)
 {
 
 }
@@ -13,22 +13,22 @@ bool Map::Initialize(LPDIRECT3DDEVICE9 device)
 	if (CreateTexture(device, "a2.png") == false)
 		return false;
 
-	field1 = new Field(0, 3136, 0, 0, 0, "field1.txt",tex);
-	if (field1->Initialize(device)==false)
+	field1 = new Field(0, 3136, 0, 0, 0, NULL, "field1.txt", tex);
+	if (field1->Initialize(device) == false)
 	{
 		return false;
 	}
-	field2 = new Field(1248, 3136, 0, 0, 0, "field2.txt",tex);
+	field2 = new Field(1248, 3136, 0, 0, 0, NULL, "field2.txt", tex);
 	if (field2->Initialize(device) == false)
 	{
 		return false;
 	}
-	field3 = new Field(1504, 3056, 0, 0, 0, "field3.txt",tex);
+	field3 = new Field(1504, 3056, 0, 0, 0, NULL, "field3.txt", tex);
 	if (field3->Initialize(device) == false)
 	{
 		return false;
 	}
-	field4 = new Field(2560, 3056, 0, 0, 0, "field4.txt",tex);
+	field4 = new Field(2560, 3056, 0, 0, 0, NULL, "field4.txt", tex);
 	if (field4->Initialize(device) == false)
 	{
 		return false;

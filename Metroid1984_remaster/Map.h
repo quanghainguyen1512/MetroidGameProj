@@ -11,7 +11,7 @@ using namespace std;
 class Map :public GameObject
 {
 public:
-	Map(float x, float y, float rotation, float speed, float maxSpeed);
+	Map(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager);
 	~Map();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);

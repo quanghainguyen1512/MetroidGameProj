@@ -31,10 +31,10 @@
 #define LEFT_JUMP_SPIN_Y 38
 
 #define RIGHT_GROUND_SPIN_X 200
-#define RIGHT_GROUND_SPIN_Y 0
+#define RIGHT_GROUND_SPIN_Y 24
 
 #define LEFT_GROUND_SPIN_X 200
-#define LEFT_GROUND_SPIN_Y 38
+#define LEFT_GROUND_SPIN_Y 62
 
 #define RIGHT_STAND_X 75
 #define RIGHT_STAND_Y 0
@@ -45,6 +45,8 @@
 // Size of a frame
 #define NORMAL_WIDTH 24
 #define NORMAL_HEIGHT 37
+
+#define GSPIN_SIZE 13
 
 //#define GROUND_SPIN_WIDTH 43
 //#define GROUND_SPIN_HEIGHT 126

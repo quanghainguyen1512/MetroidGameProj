@@ -6,7 +6,7 @@
 class Player : public GameObject
 {
 public:
-	Player(float x, float y, float rotation, float speed, float maxSpeed);
+	Player(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager);
 	~Player();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
@@ -40,10 +40,16 @@ protected:
 	bool Is_run = false;
 	bool Is_ground_spin = false;
 	bool Is_stand = true;
+	bool Is_air = true;
 
 	int direction = 0;
 	int last_direction = 1;
 
+	int ActionID;
+	int spriteID;
+
+	int spriteWidth;
+	int spriteHeight;
 };
 
 #endif

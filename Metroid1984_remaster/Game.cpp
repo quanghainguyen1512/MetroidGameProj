@@ -13,11 +13,41 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	player = new Player(626, 3297, 0, 0.15f, 0.15f);
+	map = new Map(0, 0, 0, 0, 0, NULL);
+	if (!map->Initialize(gDevice->device))
+		return false;
+
+	collisionManager = new CollisionManager();
+	if (collisionManager)
+	{
+		collisionManager->ImportCollision(19, 207, 16, 16, "brick");
+		collisionManager->ImportCollision(19, 208, 32, 16, "brick");
+		collisionManager->ImportCollision(22, 206, 16, 48, "brick");
+		collisionManager->ImportCollision(24, 208, 32, 16, "brick");
+		collisionManager->ImportCollision(25, 207, 16, 16, "brick");
+
+		collisionManager->ImportCollision(26, 200, 64, 16, "brick");
+		collisionManager->ImportCollision(27, 201, 80, 32, "brick");
+		collisionManager->ImportCollision(28, 203, 90, 16, "brick");
+		collisionManager->ImportCollision(29, 204, 80, 32, "brick");
+		collisionManager->ImportCollision(28, 206, 64, 32, "brick");
+
+		collisionManager->ImportCollision(37, 199, 16, 32, "brick");
+		collisionManager->ImportCollision(37, 201, 32, 64, "brick");
+		collisionManager->ImportCollision(41, 199, 16, 32, "brick");
+		collisionManager->ImportCollision(42, 201, 36, 64, "brick");
+
+		collisionManager->ImportCollision(37, 207, 112, 16, "brick");
+		collisionManager->ImportCollision(16, 208, 976, 32, "brick");
+	}
+
+	player = new Player(626, 3250, 0, 0.15f, 0.15f, collisionManager);
 	if (!player->Initialize(gDevice->device))
 	{
 		return false;
 	}
+
+	collisionManager->ImportPlayerCol(626, 3250, 14, 32);
 
 	keyBoard = new KeyBoard();
 	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
@@ -29,9 +59,7 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 	if (backGround->Initialize(gDevice->device) == false)
 		return false;*/
 
-	map = new Map(0, 0, 0, 0, 0);
-	if (!map->Initialize(gDevice->device))
-		return false;
+	
 
 	_width = width;
 	_height = height;

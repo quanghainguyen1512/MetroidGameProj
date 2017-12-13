@@ -1,6 +1,6 @@
 #include"GamePlayObject.h"
 
-GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed)
+GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager)
 {
 	float twopi = pi * 2;
 	position.x = x;
@@ -26,6 +26,9 @@ GameObject::GameObject(float x, float y, float rotation, float speed, float maxS
 
 	_MaxSpeed = maxSpeed;
 	tex = 0;
+
+	_collisionManager = collisionManager;
+	tex = NULL;
 }
 
 bool GameObject::Initialize(LPDIRECT3DDEVICE9 device)
@@ -73,7 +76,7 @@ GameObject::~GameObject()
 		delete _Gs;
 		_Gs = nullptr;
 	}
-	if (tex)
+	if (tex!=NULL)
 	{
 		tex->Release();
 		tex = 0;
