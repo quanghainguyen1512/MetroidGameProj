@@ -29,11 +29,7 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 	if (backGround->Initialize(gDevice->device) == false)
 		return false;*/
 
-<<<<<<< HEAD
-	map = new Map(0, 3131, 0, 0, 0);
-=======
 	map = new Map(0, 0, 0, 0, 0);
->>>>>>> TheAnh
 	if (!map->Initialize(gDevice->device))
 		return false;
 

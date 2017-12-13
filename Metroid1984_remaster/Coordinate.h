@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 #ifndef COORDINATE 
 #define COORDINATE
->>>>>>> TheAnh
 
 class Coordinate
 {
@@ -18,8 +15,5 @@ public:
 private:
 
 };
-<<<<<<< HEAD
-=======
 
 #endif 
->>>>>>> TheAnh

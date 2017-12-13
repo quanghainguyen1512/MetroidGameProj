@@ -4,10 +4,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
-<<<<<<< HEAD
-=======
 #include"Field.h"
->>>>>>> TheAnh
 
 using namespace std;
 
@@ -27,13 +24,6 @@ public:
 	void setLimitation(int x, int y, int width, int height);
 
 protected:
-<<<<<<< HEAD
-	vector<Coordinate* > Positions;
-	bool Build_brick(LPDIRECT3DDEVICE9 device);
-	void Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld);
-	int numberOfBrick = 0;
-	GameSprite* brick;
-=======
 	Field* field1;
 	Field* field2;
 	Field* field3;
@@ -42,7 +32,6 @@ protected:
 	bool Build_brick(LPDIRECT3DDEVICE9 device);
 	void Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld);
 	
->>>>>>> TheAnh
 	LPDIRECT3DDEVICE9 graphic;
 
 	int _start_x;
@@ -56,9 +45,6 @@ protected:
 	int _Player_width;
 
 	bool setComplete;
-<<<<<<< HEAD
-=======
 
 	int field_flag;
->>>>>>> TheAnh
 };
