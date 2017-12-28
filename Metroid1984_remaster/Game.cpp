@@ -13,13 +13,37 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	player = new Player(626, 3297, 0, 0.15f, 0.15f);
+	spriteManager = new SpriteManager();
+	if (!spriteManager->Initialize("sprite.txt"))
+	{
+		return false;
+	}
+
+	map = new Map(0, 0, 0, 0, 0, NULL, spriteManager);
+	if (!map->Initialize(gDevice->device))
+		return false;
+
+	collisionManager = new CollisionManager(width, height);
+	if (collisionManager)
+	{
+		collisionManager->ReadData("leftofmap2.txt");
+	}
+
+	quadTree = new QuadTree(0, 0, 512, 512, 0, 0);
+	if (quadTree)
+	{
+		quadTree->Initialize("QuadTree_leftofmap2.txt");
+	}
+	collisionManager->ImportQuadTree(quadTree);
+	player = new Player(626, 3250, 0, 0.2f, 0.2f, collisionManager,spriteManager);
 	if (!player->Initialize(gDevice->device))
 	{
 		return false;
 	}
 
-	keyBoard = new KeyBoard();
+	collisionManager->ImportPlayerCol(626, 3250, 14, 32);
+
+	keyBoard = new KeyBoard(player);
 	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
 		return false;
 
@@ -29,9 +53,7 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 	if (backGround->Initialize(gDevice->device) == false)
 		return false;*/
 
-	map = new Map(0, 0, 0, 0, 0);
-	if (!map->Initialize(gDevice->device))
-		return false;
+	
 
 	_width = width;
 	_height = height;
@@ -103,6 +125,10 @@ void Game::ProcessInput()
 		player->ProcessKey(UP_ARROW);
 	else if (keyBoard->IsKeyDown(DIK_DOWN))
 		player->ProcessKey(DOWN_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_F))
+		player->ProcessKey(GOD_MODE);
+	else if (keyBoard->IsKeyDown(DIK_SPACE))
+		player->ProcessKey(SPACE_BUTTON);
 	else
 		player->ProcessKey(UNKEY);
 }

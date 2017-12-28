@@ -1,7 +1,7 @@
 #include"BackGround.h"
 
-BackGround::BackGround(float x, float y, float rotation, float speed, float maxSpeed) :
-GameObject(x, y, rotation, speed, maxSpeed)
+BackGround::BackGround(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager,SpriteManager* spriteManager) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager,spriteManager)
 {
 
 }
@@ -13,8 +13,8 @@ bool BackGround::Initialize(LPDIRECT3DDEVICE9 device)
 
 	if (!image)
 	{
-		image = new GameSprite();
-		if (!image->initialize(device, tex, 0, 0, 7680, 4560, 1))
+		image = new GameSprite(_spriteManager);
+		if (!image->initialize(device, tex,0, 1))
 		{
 			return false;
 		}

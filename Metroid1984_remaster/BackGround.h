@@ -6,7 +6,7 @@
 class BackGround :public GameObject
 {
 public:
-	BackGround(float x, float y, float rotation, float speed, float maxSpeed);
+	BackGround(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager,SpriteManager* spriteManager);
 	~BackGround();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);

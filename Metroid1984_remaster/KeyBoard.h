@@ -3,13 +3,14 @@
 
 #include<Windows.h>
 #include<dinput.h>
+#include"Player.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
 class KeyBoard
 {
 public:
-	KeyBoard();
+	KeyBoard(Player* player);
 	~KeyBoard();
 
 	bool InitializeKeyBoard(HWND hWnd, HINSTANCE hInstance);
@@ -21,6 +22,8 @@ public:
 
 private:
 	/*HWND _hWnd;*/
+
+	Player* _player;
 
 	LPDIRECTINPUT8 _di;
 	LPDIRECTINPUTDEVICE8 _keyboard;
