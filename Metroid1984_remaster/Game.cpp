@@ -13,35 +13,37 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 		return false;
 	}
 
-	map = new Map(0, 0, 0, 0, 0, NULL);
+	spriteManager = new SpriteManager();
+	if (!spriteManager->Initialize("sprite.txt"))
+	{
+		return false;
+	}
+
+	map = new Map(0, 0, 0, 0, 0, NULL, spriteManager, gDevice);
 	if (!map->Initialize(gDevice->device))
 		return false;
 
-	collisionManager = new CollisionManager();
+	collisionManager = new CollisionManager(width, height);
 	if (collisionManager)
 	{
-		collisionManager->ImportCollision(19, 207, 16, 16, "brick");
-		collisionManager->ImportCollision(19, 208, 32, 16, "brick");
-		collisionManager->ImportCollision(22, 206, 16, 48, "brick");
-		collisionManager->ImportCollision(24, 208, 32, 16, "brick");
-		collisionManager->ImportCollision(25, 207, 16, 16, "brick");
-
-		collisionManager->ImportCollision(26, 200, 64, 16, "brick");
-		collisionManager->ImportCollision(27, 201, 80, 32, "brick");
-		collisionManager->ImportCollision(28, 203, 90, 16, "brick");
-		collisionManager->ImportCollision(29, 204, 80, 32, "brick");
-		collisionManager->ImportCollision(28, 206, 64, 32, "brick");
-
-		collisionManager->ImportCollision(37, 199, 16, 32, "brick");
-		collisionManager->ImportCollision(37, 201, 32, 64, "brick");
-		collisionManager->ImportCollision(41, 199, 16, 32, "brick");
-		collisionManager->ImportCollision(42, 201, 36, 64, "brick");
-
-		collisionManager->ImportCollision(37, 207, 112, 16, "brick");
-		collisionManager->ImportCollision(16, 208, 976, 32, "brick");
+		collisionManager->ReadBrickData("leftofmap3.txt");
+		collisionManager->ReadMonsterData("Monster1_2.txt");
+		collisionManager->ReadRelation("Relation2.txt");
+		map->ImportCollisionManager(collisionManager);
+	}
+	else
+	{
+		return false;
 	}
 
-	player = new Player(626, 3250, 0, 0.15f, 0.15f, collisionManager);
+	quadTree = new QuadTree(0, 0, 512, 512, 0, 0);
+	if (quadTree)
+	{
+		quadTree->Initialize("QuadTree_leftofmap4.txt");
+	}
+	collisionManager->ImportQuadTree(quadTree);
+
+	player = new Player(626, 3250, 0, 0.2f, 0.2f, collisionManager, spriteManager, gDevice);
 	if (!player->Initialize(gDevice->device))
 	{
 		return false;
@@ -49,17 +51,16 @@ bool Game::Initialize(HWND hWnd, HINSTANCE hInstance, int width, int height)
 
 	collisionManager->ImportPlayerCol(626, 3250, 14, 32);
 
-	keyBoard = new KeyBoard();
+	monsterManager = new MonsterManager(collisionManager, spriteManager, gDevice);
+	if (monsterManager)
+	{
+		monsterManager->Initialize("Monster1_2.txt");
+	}
+	keyBoard = new KeyBoard(player);
 	if (keyBoard->InitializeKeyBoard(hWnd, hInstance) == false)
 		return false;
 
 	camera = new Camera(width, height, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
-	/*backGround = new BackGround(0, 0, 0, 0, 0);
-	if (backGround->Initialize(gDevice->device) == false)
-		return false;*/
-
-	
 
 	_width = width;
 	_height = height;
@@ -80,12 +81,25 @@ void Game::Update(float gameTime)
 	_gameTime = gameTime;
 	camera->Follow(player);
 	camera->Update();
+	map->setLimitation(
+		(player->GetPosition().x - (camera->getWidth() / 2)),
+		((player->GetPosition().y - 32) - (camera->getHeight() / 2)),
+		camera->getWidth(),
+		camera->getHeight(),
+		player->GetPosition().x,
+		player->GetPosition().y);
+
 	player->Update(gameTime);
+
+	for (int i = 0; i < collisionManager->MonsterList.size(); i++)
+	{
+		monsterManager->update(collisionManager->MonsterList[i]);
+	}
+
 }
 
 void Game::DrawMap()
 {
-	map->setLimitation((player->GetPosition().x - (camera->getWidth() / 2)), ((player->GetPosition().y - 32) - (camera->getHeight() / 2)), camera->getWidth(), camera->getHeight());
 	map->Draw(_gameTime);
 }
 
@@ -99,20 +113,28 @@ void Game::Draw(float gameTime)
 		camera->SetTransform(gDevice);
 	}
 
-	/*if (backGround&& backGround->is_initialize==true)
-	{
-		backGround->Draw(gameTime);
-	}*/
 	if (map&&map->IsInitialize == true)
 	{
 		DrawMap();
 	}
+
+	for (int i = 0; i < collisionManager->MonsterList.size(); i++)
+	{
+		monsterManager->draw(collisionManager->MonsterList[i]);
+	}
+
+	/*if (monsterManager)
+	{
+		monsterManager->drawAll();
+	}*/
 
 	if (player)
 		player->Draw(gameTime);
 
 	gDevice->End();
 	gDevice->Present();
+
+	collisionManager->resetList();
 }
 
 void Game::ProcessController(HWND hWnd)
@@ -131,6 +153,10 @@ void Game::ProcessInput()
 		player->ProcessKey(UP_ARROW);
 	else if (keyBoard->IsKeyDown(DIK_DOWN))
 		player->ProcessKey(DOWN_ARROW);
+	else if (keyBoard->IsKeyDown(DIK_F))
+		player->ProcessKey(GOD_MODE);
+	else if (keyBoard->IsKeyDown(DIK_SPACE))
+		player->ProcessKey(SPACE_BUTTON);
 	else
 		player->ProcessKey(UNKEY);
 }
@@ -154,13 +180,6 @@ Game::~Game()
 		delete camera;
 		camera = nullptr;
 	}
-
-	/*if (backGround)
-	{
-		delete backGround;
-		backGround = nullptr;
-	}*/
-
 	if (map)
 	{
 		delete map;

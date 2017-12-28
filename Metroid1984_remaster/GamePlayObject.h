@@ -8,6 +8,7 @@
 #include"GameSprite.h"
 #include"DataSet.h"
 #include"CollisionManager.h"
+#include"SpriteManager.h"
 
 enum class ObjectStatus{ Active, Dying, Dead };
 
@@ -16,13 +17,20 @@ const float pi = 3.14159265359;
 class GameObject
 {
 public:
-	GameObject(float x, float y, float rotation, float speed, float maxSpeed,CollisionManager* collisionManager);
+	GameObject(
+		float x,
+		float y,
+		float rotation,
+		float speed,
+		float maxSpeed,
+		CollisionManager* collisionManager,
+		SpriteManager* spritemanager,
+		GraphicsDevice* gDevice);
 	~GameObject();
 
 	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
 	virtual void Update(float gameTime);
 	virtual void Draw(float gameTime);
-	virtual bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	ObjectStatus GetStatus() const;
 
@@ -30,10 +38,10 @@ public:
 
 	D3DXVECTOR3 getPosition();
 
+	SpriteManager* _spriteManager;
 protected:
 
-	LPDIRECT3DTEXTURE9 tex;
-	//physics data
+	GraphicsDevice* _gDevice;
 	D3DXVECTOR3 position;
 	D3DXVECTOR3 velocity;
 	float _rotation;

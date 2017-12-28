@@ -1,6 +1,6 @@
 #include"GamePlayObject.h"
 
-GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager)
+GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, SpriteManager* spritemanager, GraphicsDevice* gDevice)
 {
 	float twopi = pi * 2;
 	position.x = x;
@@ -25,10 +25,10 @@ GameObject::GameObject(float x, float y, float rotation, float speed, float maxS
 	velocity.z = 0;
 
 	_MaxSpeed = maxSpeed;
-	tex = 0;
 
 	_collisionManager = collisionManager;
-	tex = NULL;
+	_spriteManager = spritemanager;
+	_gDevice = gDevice;
 }
 
 bool GameObject::Initialize(LPDIRECT3DDEVICE9 device)
@@ -42,11 +42,6 @@ void GameObject::Update(float gameTime)
 
 void GameObject::Draw(float gameTime)
 {
-}
-
-bool GameObject::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
-{
-	return true;
 }
 
 ObjectStatus GameObject::GetStatus() const
@@ -75,10 +70,5 @@ GameObject::~GameObject()
 	{
 		delete _Gs;
 		_Gs = nullptr;
-	}
-	if (tex!=NULL)
-	{
-		tex->Release();
-		tex = 0;
 	}
 }

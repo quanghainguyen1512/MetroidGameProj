@@ -2,161 +2,329 @@
 
 using namespace std;
 
-Field::Field(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, std::string file, LPDIRECT3DTEXTURE9 SourceTex) :
-GameObject(x, y, rotation, speed, maxSpeed, collisionManager)
+Field::Field(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, std::string file, SpriteManager* spriteManager, GraphicsDevice* gDevice) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager,spriteManager,gDevice)
 {
 	fileName = file;
-	tex = SourceTex;
+	count = 0;
 }
 
 bool Field::Initialize(LPDIRECT3DDEVICE9 device)
 {
 	graphic = device;
-	if (Build_brick(device) == false)
+	if (createStringMap() == false)
 		return false;
 	return true;
 }
 
-bool Field::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
+bool Field::createStringMap()
 {
-	return true;
-}
-
-bool Field::Build_brick(LPDIRECT3DDEVICE9 device)
-{
-	int xInWorld = 0; int yInWorld = 0;
 	std::ifstream file_txt(fileName);
 	std::string str;
-	std::string file_contents;
-	while (std::getline(file_txt, str))
+	
+	while (std::getline(file_txt,str))
 	{
-		xInWorld = 0;
-		char a[1024];
-		strncpy_s(a, str.c_str(), sizeof(a));
-		a[sizeof(a) - 1] = -1;
-		for (int i = 0; i < sizeof(a); i++)
-		{
-			switch (a[i])
-			{
-			case '1':
-			{
-				Make_brick(device, 0, 0, xInWorld, yInWorld);
-				break;
-			}
-			case '2':
-			{
-				Make_brick(device, 0, 1, xInWorld, yInWorld);
-				break;
-			}
-			case '3':
-			{
-				Make_brick(device, 0, 2, xInWorld, yInWorld);
-				break;
-			}
-			case '4':
-			{
-				Make_brick(device, 0, 3, xInWorld, yInWorld);
-				break;
-			}
-			case '5':
-			{
-				Make_brick(device, 0, 4, xInWorld, yInWorld);
-				break;
-			}
-			case '6':
-			{
-				Make_brick(device, 0, 5, xInWorld, yInWorld);
-				break;
-			}
-			case '7':
-			{
-				Make_brick(device, 0, 6, xInWorld, yInWorld);
-				break;
-			}
-			case '8':
-			{
-				Make_brick(device, 0, 7, xInWorld, yInWorld);
-				break;
-			}
-			case '9':
-			{
-				Make_brick(device, 0, 8, xInWorld, yInWorld);
-				break;
-			}
-			case 'a':
-			{
-				Make_brick(device, 0, 9, xInWorld, yInWorld);
-				break;
-			}
-			case 'b':
-			{
-				Make_brick(device, 0, 10, xInWorld, yInWorld);
-				break;
-			}
-			case 'c':
-			{
-				Make_brick(device, 0, 11, xInWorld, yInWorld);
-				break;
-			}
-			case 'd':
-			{
-				Make_brick(device, 0, 12, xInWorld, yInWorld);
-
-				break;
-			}
-			case 'e':
-			{
-				Make_brick(device, 0, 13, xInWorld, yInWorld);
-
-				break;
-			}
-			case 'f':
-			{
-				Make_brick(device, 0, 14, xInWorld, yInWorld);
-
-				break;
-			}
-			case 'g':
-			{
-				Make_brick(device, 0, 15, xInWorld, yInWorld);
-
-				break;
-			}
-			case '0':
-			{
-				break;
-			}
-			case ' ':
-			{
-				xInWorld--;
-				break;
-			}
-			default:
-				break;
-			}
-
-			xInWorld++;
-		}
-		yInWorld++;
+		listString[count] = str;
+		count++;
 	}
+
 	return true;
-}
-void Field::Make_brick(LPDIRECT3DDEVICE9 device, int columnInSource, int rowInSource, int xInWorld, int yInWorld)
-{
-	Coordinate* c = new Coordinate(columnInSource * 16, rowInSource * 16, xInWorld * 16 + position.x, yInWorld * 16 + position.y);
-	Positions.push_back(c);
 }
 
 void Field::Draw(float gameTime)
 {
-	brick = new GameSprite();
-	if (brick->initialize(graphic, tex, Positions[0]->_xInTexture, Positions[0]->_yInTexture, 16, 16, 1))
+	brick = new GameSprite(_spriteManager);
+	if (brick->initialize(graphic, _gDevice->getBrickTex(), BRICK, 1))
 	{
-		for (int i = 0; i < Positions.size(); i++)
+		int x = _start_x - position.x;
+		int y = _start_y - position.y;
+		int x16Pixel = x / 16;
+		int y16Pixel = y / 16;
+		
+		for (int i = y16Pixel; i < y16Pixel + 16; i++)
 		{
-			if (Positions[i]->_xInWorld >= _start_x - 16 && Positions[i]->_xInWorld <= (_start_x + _limit_width) && Positions[i]->_yInWorld >= _start_y - 16 && Positions[i]->_yInWorld <= (_start_y + _limit_height))
+			char a[1024];
+			strncpy_s(a, listString[i].c_str(), sizeof(a));
+			a[sizeof(a) - 1] = -1;
+			for (int j = x16Pixel; j < x16Pixel + 17; j++)
 			{
-				brick->Draw(Positions[i]->_xInTexture, Positions[i]->_yInTexture, 16, 16, D3DXVECTOR3(Positions[i]->_xInWorld, Positions[i]->_yInWorld, 0));
+				char b = a[j];
+				switch (b)
+				{
+				case '1':
+				{
+					brick->Draw(0, 0, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '2':
+				{
+					brick->Draw(0, 16, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '3':
+				{
+					brick->Draw(0, 32, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '4':
+				{
+					brick->Draw(0, 48, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '5':
+				{
+					brick->Draw(0, 64, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '6':
+				{
+					brick->Draw(0, 80, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '7':
+				{
+					brick->Draw(0, 96, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '8':
+				{
+					brick->Draw(0, 112, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '9':
+				{
+					brick->Draw(0, 128, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'a':
+				{
+					brick->Draw(0, 144, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'b':
+				{
+					brick->Draw(0, 160, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'c':
+				{
+					brick->Draw(0, 176, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'd':
+				{
+					brick->Draw(0, 192, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+
+					break;
+				}
+				case 'e':
+				{
+					brick->Draw(0, 224, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'f':
+				{
+					brick->Draw(0, 240, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+
+					break;
+				}
+				case 'g':
+				{
+					brick->Draw(0, 256, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'h':
+				{
+					brick->Draw(0, 270, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'i':
+				{
+					brick->Draw(0, 288, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'k':
+				{
+					brick->Draw(0, 304, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'l':
+				{
+					brick->Draw(0, 320, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'm':
+				{
+					brick->Draw(0, 336, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'n':
+				{
+					brick->Draw(0, 352, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'o':
+				{
+					brick->Draw(0, 368, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'p':
+				{
+					brick->Draw(0, 384, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'q':
+				{
+					brick->Draw(0, 400, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'r':
+				{
+					brick->Draw(0, 416, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 's':
+				{
+					brick->Draw(0, 432, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 't':
+				{
+					brick->Draw(0, 448, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'u':
+				{
+					brick->Draw(0, 464, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'v':
+				{
+					brick->Draw(0, 480, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'w':
+				{
+					brick->Draw(0, 496, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'x':
+				{
+					brick->Draw(0, 512, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'y':
+				{
+					brick->Draw(0, 528, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'z':
+				{
+					brick->Draw(0, 544, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'A':
+				{
+					brick->Draw(0, 560, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'B':
+				{
+					brick->Draw(0, 576, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'C':
+				{
+					brick->Draw(0, 592, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'D':
+				{
+					brick->Draw(0, 608, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'E':
+				{
+					brick->Draw(0, 624, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'F':
+				{
+					brick->Draw(0, 640, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'G':
+				{
+					brick->Draw(0, 656, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'H':
+				{
+					brick->Draw(0, 672, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'I':
+				{
+					brick->Draw(0, 688, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'K':
+				{
+					brick->Draw(0, 704, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'L':
+				{
+					brick->Draw(0, 720, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'M':
+				{
+					brick->Draw(0, 736, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'N':
+				{
+					brick->Draw(0, 752, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'O':
+				{
+					brick->Draw(0, 768, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'P':
+				{
+					brick->Draw(0, 784, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'Q':
+				{
+					brick->Draw(0, 800, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'R':
+				{
+					brick->Draw(0, 816, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'S':
+				{
+					brick->Draw(0, 832, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case 'T':
+				{
+					brick->Draw(0, 848, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case '0':
+				{
+					break;
+				}
+				default:
+					break;
+				}
 			}
 		}
 	}

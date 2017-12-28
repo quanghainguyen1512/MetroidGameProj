@@ -47,6 +47,15 @@ bool GraphicsDevice::Initialize(HWND hWnd, bool windowed)
 		return false;
 	}
 
+	if (!CreateCharacterTex(FILE))
+	{
+		return false;
+	}
+	if (!CreateBrickTex("a2.png"))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -71,4 +80,69 @@ void GraphicsDevice::Present()
 {
 	//trinh bay len man hinh window
 	device->Present(NULL, NULL, NULL, NULL);
+}
+
+bool GraphicsDevice::CreateCharacterTex(string file)
+{
+	D3DXIMAGE_INFO info;
+	HRESULT result = D3DXGetImageInfoFromFile(file.c_str(), &info);
+
+	if (!SUCCEEDED(D3DXCreateTextureFromFileEx(
+		device,
+		file.c_str(),
+		info.Width,
+		info.Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(0, 0, 0),
+		&info,
+		NULL,
+		&characterTex)))
+	{
+		std::string s = "Make sure the file exist and path is right. Requested Image: " + file;
+		MessageBox(NULL, s.c_str(), NULL, NULL);
+		return false;
+	}
+	return true;
+}
+
+bool GraphicsDevice::CreateBrickTex(string file)
+{
+	D3DXIMAGE_INFO info;
+	HRESULT result = D3DXGetImageInfoFromFile(file.c_str(), &info);
+
+	if (!SUCCEEDED(D3DXCreateTextureFromFileEx(
+		device,
+		file.c_str(),
+		info.Width,
+		info.Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(0, 0, 0),
+		&info,
+		NULL,
+		&brickTex)))
+	{
+		std::string s = "Make sure the file exist and path is right. Requested Image: " + file;
+		MessageBox(NULL, s.c_str(), NULL, NULL);
+		return false;
+	}
+	return true;
+}
+
+LPDIRECT3DTEXTURE9 GraphicsDevice::getCharaterTex()
+{
+	return characterTex;
+}
+LPDIRECT3DTEXTURE9 GraphicsDevice::getBrickTex()
+{
+	return brickTex;
 }

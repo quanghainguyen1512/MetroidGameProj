@@ -1,8 +1,11 @@
 #include"CollisionManager.h"
 
-CollisionManager::CollisionManager()
+using namespace std;
+
+CollisionManager::CollisionManager(int width, int height)
 {
-	ImportCollision(37, 207, 112, 16, "brick");
+	_width = width;
+	_height = height;
 }
 
 CollisionManager::~CollisionManager()
@@ -10,15 +13,15 @@ CollisionManager::~CollisionManager()
 
 }
 
-void CollisionManager::ImportCollision(float x, float y, float width, float height,string tag)
+void CollisionManager::ImportCollision(int stt, float x, float y, float width, float height, string tag)
 {
-	Collision* object= new Collision(x * 16, y * 16, width, height, tag);
+	Brick* object = new Brick(stt, x * 16, y * 16, width * 16, height * 16, tag);
 	BrickObject.push_back(object);
-	
+
 }
 void CollisionManager::ImportPlayerCol(float x, float y, float width, float height)
 {
-	PlayerCol = new Collision(x, y, width, height, "Player");
+	PlayerCol = new Collision(-1, x, y, width, height, "Player");
 }
 void CollisionManager::UpdatePlayerCol(float x, float y, float width, float height, float velocityx, float velocityy)
 {
@@ -58,27 +61,56 @@ float CollisionManager::CheckCollision(float& normalx, float& normaly)
 	return min;
 }
 
-float CollisionManager::RemainYtime(float y0, float VelocityY)
+float CollisionManager::RemainYtime(float y0, float height, float VelocityY, string& tag)
 {
 	float min = 0;
-	float time[10];
+	float Btime[20];
+	float Mtime[20];
 	BrickIndex = 0;
-	for (int i = 0; i < BrickObject.size(); i++)
+	MonsterIndex = 0;
+	int brickIndex[20];
+	int monsterIndex[20];
+	for (int i = 0; i < CollisionList.size(); i++)
 	{
-		float result = BrickObject[i]->YCollisionTime(y0, PlayerCol, VelocityY);
+		float result = BrickObject[CollisionList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
 		if (result != 0)
 		{
-			time[BrickIndex] = result;
+			Btime[BrickIndex] = result;
+			brickIndex[BrickIndex] = i;
 			BrickIndex++;
+
 		}
 	}
+	for (int i = 0; i < MonsterList.size(); i++)
+	{
+		float result = MonsterObject[MonsterList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
+		if (result != 0)
+		{
+			Mtime[MonsterIndex] = result;
+			monsterIndex[MonsterIndex] = i;
+			MonsterIndex++;
 
-	min = time[0];
+		}
+	}
+	if (BrickIndex > 0)
+	{
+		min = Btime[0];
+		tag = BrickObject[brickIndex[0]]->getTag();
+	}
 	for (int i = 0; i < BrickIndex; i++)
 	{
-		if (time[i] < min)
+		if (Btime[i] < min)
 		{
-			min = time[i];
+			min = Btime[i];
+			tag = BrickObject[brickIndex[i]]->getTag();
+		}
+	}
+	for (int i = 0; i < MonsterIndex; i++)
+	{
+		if (Mtime[i] < min)
+		{
+			min = Mtime[i];
+			tag = MonsterObject[monsterIndex[i]]->getTag();
 		}
 	}
 	if (min < 0)
@@ -87,26 +119,55 @@ float CollisionManager::RemainYtime(float y0, float VelocityY)
 		return min;
 }
 
-float CollisionManager::RemainXtime(float x0, float VelocityX)
+float CollisionManager::RemainXtime(float x0, float width, float VelocityX, string& tag)
 {
 	float min = 0;
-	float time[10];
+	float Btime[20];
+	float Mtime[20];
 	BrickIndex = 0;
-	for (int i = 0; i < BrickObject.size(); i++)
+	MonsterIndex = 0;
+	int brickIndex[20];
+	int monsterIndex[20];
+	for (int i = 0; i < CollisionList.size(); i++)
 	{
-		float result = BrickObject[i]->XCollisionTime(x0, PlayerCol, VelocityX);
+		float result = BrickObject[CollisionList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
 		if (result != 0)
 		{
-			time[BrickIndex] = result;
+			Btime[BrickIndex] = result;
+			brickIndex[BrickIndex] = i;
 			BrickIndex++;
 		}
 	}
-	min = time[0];
+	for (int i = 0; i < MonsterList.size(); i++)
+	{
+		float result = MonsterObject[MonsterList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
+		if (result != 0)
+		{
+			Mtime[MonsterIndex] = result;
+			monsterIndex[MonsterIndex] = i;
+			MonsterIndex++;
+		}
+	}
+	if (BrickIndex > 0)
+	{
+		min = Btime[0];
+		tag = BrickObject[brickIndex[0]]->getTag();
+	}
+
 	for (int i = 0; i < BrickIndex; i++)
 	{
-		if (time[i] < min)
+		if (Btime[i] < min)
 		{
-			min = time[i];
+			min = Btime[i];
+			tag = BrickObject[brickIndex[i]]->getTag();
+		}
+	}
+	for (int i = 0; i < MonsterIndex; i++)
+	{
+		if (Mtime[i] < min)
+		{
+			min = Mtime[i];
+			tag = MonsterObject[monsterIndex[i]]->getTag();
 		}
 	}
 	if (min < 0)
@@ -115,14 +176,154 @@ float CollisionManager::RemainXtime(float x0, float VelocityX)
 		return min;
 
 }
-
-int CollisionManager::CheckSideBySide()
+void CollisionManager::ReadBrickData(string fileName)
 {
-	for ( int i = 0; i < BrickObject.size(); i++)
+	ifstream file_txt(fileName);
+	string str;
+	string fileContent;
+	while (getline(file_txt, str))
 	{
-		int result = BrickObject[i]->SizeBySize(PlayerCol);
-		if (result != 0)
-			return result;
+		int stt;
+		int x;
+		int y;
+		int width;
+		int height;
+		string tag;
+		std::istringstream iss(str);
+
+		iss >> stt >> tag >> x >> y >> width >> height;
+		ImportCollision(stt, x, y, width, height, tag);
 	}
-	return 0;
+}
+
+void CollisionManager::SetLimitation(int x, int y)
+{
+	int startX = x / 16;
+	int startY = y / 16;
+	int width16Pixel = _width / 16;
+	int height16Pixel = _height / 16;
+
+	int x16Pixel = (startX - 8);
+	int y16Pixel = (startY - 8);
+
+	vector<int> temp;
+
+	_quadTree->Load2(temp, x16Pixel, y16Pixel, 16, 15);
+	refresh(temp, x16Pixel * 16, y16Pixel * 16, 256, 240);
+	MonsterAndBrick();
+}
+
+void CollisionManager::refresh(vector<int> v, int camx, int camy, int camwidth, int camheight)
+{
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (camy <= BrickObject[v[i]]->getY() && BrickObject[v[i]]->getY() < camy + camheight)
+		{
+			if (!(BrickObject[v[i]]->getX() + BrickObject[v[i]]->getWidth() < camx ||
+				BrickObject[v[i]]->getX() > camx + camwidth))
+			{
+				if (BrickObject[v[i]]->Active == true)
+				{
+					CollisionList.push_back(v[i]);
+					for (int e = 0; e < BrickObject[v[i]]->getCount(); e++)
+					{
+						MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
+					}
+				}
+			}
+		}
+		if (camx <= BrickObject[v[i]]->getX() && BrickObject[v[i]]->getX() < camx + camwidth)
+		{
+			if (!(BrickObject[v[i]]->getY() + BrickObject[v[i]]->getHeight() < camy ||
+				BrickObject[v[i]]->getY() > camy + camheight))
+			{
+				if (BrickObject[v[i]]->Active == true)
+				{
+					CollisionList.push_back(v[i]);
+					for (int e = 0; e < BrickObject[v[i]]->getCount(); e++)
+					{
+						MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
+					}
+				}
+			}
+		}
+	}
+}
+
+void CollisionManager::ImportQuadTree(QuadTree* Q)
+{
+	_quadTree = Q;
+}
+void CollisionManager::resetList()
+{
+	CollisionList.clear();
+	MonsterList.clear();
+}
+Monster1Collision* CollisionManager::getMonster(int index)
+{
+	return MonsterObject[index];
+}
+void CollisionManager::ReadMonsterData(string fileName)
+{
+	ifstream file_txt(fileName);
+	string str;
+	string fileContent;
+	while (getline(file_txt, str))
+	{
+		int stt;
+		int x;
+		int y;
+		int width;
+		int height;
+		string tag;
+		int mode;
+		std::istringstream iss(str);
+
+		iss >> stt >> x >> y >> width >> height >> tag >> mode;
+		ImportMonsterCollision(stt, x, y, width, height, tag, mode);
+	}
+}
+void CollisionManager::ImportMonsterCollision(int stt, float x, float y, float width, float height, string tag, int mode)
+{
+	Monster1Collision* M = new Monster1Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
+	MonsterObject.push_back(M);
+}
+void CollisionManager::UpdateMonsterCol(int stt, float x, float y, float velocityX, float velocityY)
+{
+	MonsterObject[stt]->Update(x, y, 16, 16, velocityX, velocityY);
+}
+
+void CollisionManager::MonsterAndBrick()
+{
+	for (int i = 0; i < MonsterList.size(); i++)
+	{
+		//for (int e = 0; e < MonsterObject[MonsterList[i]]->count; e++)
+		int e = 0;
+		{
+			int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getX();
+			int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getY();
+			int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getWidth();
+			int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getHeight();
+
+			MonsterObject[MonsterList[i]]->Climb(x, y, width, height);
+		}
+
+	}
+}
+
+void CollisionManager::ReadRelation(string fileName)
+{
+	ifstream file_txt(fileName);
+	string str;
+	string fileContent;
+	while (getline(file_txt, str))
+	{
+		int monsterIndex;
+		int brickIndex;
+		std::istringstream iss(str);
+		iss >> monsterIndex >> brickIndex;
+		
+		MonsterObject[monsterIndex]->ImportTarget(brickIndex);
+		BrickObject[brickIndex]->ImportTarget(monsterIndex);
+	}
 }

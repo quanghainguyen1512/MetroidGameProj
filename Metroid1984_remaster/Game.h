@@ -10,6 +10,8 @@
 #include"BackGround.h"
 #include"Map.h"
 #include"CollisionManager.h"
+#include"QuadTree.h"
+#include"MonsterManager.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -42,11 +44,16 @@ private:
 
 	Camera* camera;
 
-	//BackGround* backGround;
-
 	Map* map;
 
 	CollisionManager* collisionManager;
+
+	SpriteManager* spriteManager;
+
+	QuadTree* quadTree;
+
+	MonsterManager* monsterManager;
+
 };
 
 #endif GAME_H

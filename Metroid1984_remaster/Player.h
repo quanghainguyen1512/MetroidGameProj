@@ -6,7 +6,15 @@
 class Player : public GameObject
 {
 public:
-	Player(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager);
+	Player(
+		float x, 
+		float y, 
+		float rotation, 
+		float speed, 
+		float maxSpeed, 
+		CollisionManager* collisionManager, 
+		SpriteManager* spritemanager, 
+		GraphicsDevice* gDevice);
 	~Player();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
@@ -20,6 +28,9 @@ public:
 
 	bool InitializeFlag();
 	D3DXVECTOR3 GetPosition();
+
+	void UpdateBehavior();
+	void jump();
 
 protected:
 
@@ -42,14 +53,23 @@ protected:
 	bool Is_stand = true;
 	bool Is_air = true;
 
-	int direction = 0;
-	int last_direction = 1;
+	float directionX = 0;
+	float last_directionX = 1;
+	float directionY = 1;
+	float last_directionY = 1;
 
 	int ActionID;
 	int spriteID;
 
 	int spriteWidth;
 	int spriteHeight;
+	int lastWidth;
+	int lastHeight;
+
+	string collisionXTag;
+	string collisionYTag;
+
+	int height_limited;
 };
 
 #endif
