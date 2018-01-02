@@ -46,6 +46,12 @@ void MonsterManager::Import(int stt, float x, float y, float rotation, float spe
 		m->Initialize(_gDevice->device);
 		MList.push_back(m);
 	}
+	if (tag == "monster3")
+	{
+		GameObject* m = new Monster3(stt, x * 16, y * 16, rotation, speed, maxSpeed, COM, SM, _gDevice, tag, mode);
+		m->Initialize(_gDevice->device);
+		MList.push_back(m);
+	}
 }
 
 void MonsterManager::update(int index)

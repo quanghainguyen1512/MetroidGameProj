@@ -22,7 +22,7 @@ public:
 
 protected:
 	bool Destroyable;
-	int monster[5];
+	int monster[20];
 	int count;
 
 };

@@ -7,14 +7,14 @@ Monster2::Monster2(int stt,	float x,float y,float rotation,float speed,	float ma
 	Monster2CollisionIndex = stt;
 	_stt = stt;
 	
-	velocity.x = 3;
-	velocity.y = 3;
+	velocity.x = 4;
+	velocity.y = 4;
 
 	vectorX = 0;
 	vectorY = 0;
 
-	int StaticTime = 5;
-	int timecount = 0;
+	StaticTime = 5;
+	timecount = 0;
 	bool Is_attack = false;
 }
 
@@ -45,7 +45,7 @@ void Monster2::Update(float gameTime)
 	timecount++;
 	if (Is_attack == false)
 	{
-		if (timecount % 5 == 0)
+		if (timecount % StaticTime == 0)
 		{
 			Spin->Update(gameTime);
 		}

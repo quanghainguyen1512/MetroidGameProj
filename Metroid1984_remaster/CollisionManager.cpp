@@ -312,7 +312,6 @@ void CollisionManager::MonsterAndBrick()
 {
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
-		//for (int e = 0; e < MonsterObject[MonsterList[i]]->count; e++)
 		if (MonsterObject[MonsterList[i]]->Active==true)
 		{
 			if (MonsterObject[MonsterList[i]]->getTag() == "monster1")
@@ -337,6 +336,16 @@ void CollisionManager::MonsterAndBrick()
 
 				MonsterObject[MonsterList[i]]->Fall(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
 			}
+			else if (MonsterObject[MonsterList[i]]->getTag() == "monster3")
+			{
+				int e = 1;
+				int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getX();
+				int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getY();
+				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
+				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
+
+				MonsterObject[MonsterList[i]]->LeftRight(x, y, width, height);
+			}
 		}
 	}
 }
@@ -355,5 +364,14 @@ void CollisionManager::ReadRelation(string fileName)
 		
 		MonsterObject[monsterIndex]->ImportTarget(brickIndex);
 		BrickObject[brickIndex]->ImportTarget(monsterIndex);
+		if (MonsterObject[monsterIndex]->getTag() == "monster3")
+		{
+			int x = BrickObject[brickIndex]->getX();
+			int y = BrickObject[brickIndex]->getY();
+			int width = BrickObject[brickIndex]->getWidth();
+			int height = BrickObject[brickIndex]->getHeight();
+
+			MonsterObject[monsterIndex]->SetLimitation(x, y, width, height);
+		}
 	}
 }

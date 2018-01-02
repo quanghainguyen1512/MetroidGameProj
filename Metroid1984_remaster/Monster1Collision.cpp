@@ -9,19 +9,28 @@ Collision(stt, x, y, width, height, tag)
 	if (tag == "monster1")
 	{
 		leftRight = mode;
-		_velocityX = 0.5;
-		_velocityY = 0.5;
+		_velocityX = 1;
+		_velocityY = 1;
 		vectorX = 1;
 		vectorY = 0;
 		spriteState = 3;
 	}
 	else if (tag == "monster2")
 	{
-		_velocityX = 3;
-		_velocityY = 3;
+		_velocityX = 4;
+		_velocityY = 4;
 		vectorX = 0;
 		vectorY = 0;
 		attack = false;
+	}
+	else if (tag == "monster3")
+	{
+		_velocityX = 2;
+		_velocityY = 0;
+		vectorX = 1;
+		vectorY = 0;
+		minX = mode * 16;
+		maxX = mode * 16;
 	}
 }
 
@@ -54,6 +63,10 @@ void Monster1Collision::Orbit(int x, int y, int width, int height, int TargetX, 
 	else if (_tag == "monster2")
 	{
 		Fall(x, y, width, height, TargetX, TargetX);
+	}
+	else if (_tag == "monster3")
+	{
+		LeftRight(x, y, width, height);
 	}
 }
 
@@ -164,7 +177,20 @@ void Monster1Collision::Fall(int x, int y, int width, int height, int targetX, i
 			}
 		}
 	}
-	
+	_velocityX = abs(_velocityX)*vectorX;
+	_velocityY = abs(_velocityY)*vectorY;
+}
+
+void Monster1Collision::LeftRight(int x, int y, int width, int height)
+{
+	if (_x <= minX)
+	{
+		vectorX = 1;
+	}
+	else if (_x + _width >= maxX)
+	{
+		vectorX = -1;
+	}
 	_velocityX = abs(_velocityX)*vectorX;
 	_velocityY = abs(_velocityY)*vectorY;
 }
@@ -191,6 +217,19 @@ int Monster1Collision::getST()
 	else
 		return 0;
 
+}
+
+void Monster1Collision::SetLimitation(int x, int y, int width, int height)
+{
+	if (x > minX)
+	{
+		maxX = x;
+	}
+	else if (x + width < minX)
+	{
+		maxX = minX;
+		minX = x + width;
+	}
 }
 
 Monster1Collision::~Monster1Collision()

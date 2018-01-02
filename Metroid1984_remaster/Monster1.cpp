@@ -7,10 +7,10 @@ GameObject(x, y, rotation, speed, maxSpeed, collisionManager, spritemanager,gDev
 	Monster1CollisionIndex = stt;
 	_stt = stt;
 	leftright = mode;
-	velocity.x = 0.5;
-	velocity.y = 0.5;
+	velocity.x = 1;
+	velocity.y = 1;
 	spriteState = 3;
-	vectorX = -1;
+	vectorX = 1;
 	vectorY = 0;
 }
 

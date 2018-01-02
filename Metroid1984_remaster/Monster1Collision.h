@@ -28,6 +28,7 @@ public:
 
 	int GetActiveArea(int index);
 
+	void SetLimitation(int x, int y, int width, int height);
 
 	int getVX();
 	int getVY();
@@ -45,6 +46,9 @@ private:
 	int vectorY;
 	int spriteState;
 	int timeCount = 0;
+	
+	int maxX;
+	int minX;
 };
 
 #endif

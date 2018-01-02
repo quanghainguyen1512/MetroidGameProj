@@ -3,6 +3,7 @@
 
 #include"Monster1.h"
 #include"Monster2.h"
+#include"Monster3.h"
 
 class MonsterManager
 {
