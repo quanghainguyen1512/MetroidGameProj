@@ -10,7 +10,7 @@
 #include"CollisionManager.h"
 #include"SpriteManager.h"
 
-enum class ObjectStatus{ Active, Dying, Dead };
+enum class ObjectStatus{ Contruction ,Active, Dying, Dead, Defended, Auto };
 
 const float pi = 3.14159265359;
 

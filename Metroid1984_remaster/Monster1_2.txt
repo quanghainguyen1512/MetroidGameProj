@@ -75,3 +75,16 @@
 74 139 73 1 1 monster1 1
 75 122 73 1 1 monster1 1
 76 119 73 1 1 monster1 1
+77 52 197 1 2 monster2 0
+78 56 199 1 2 monster2 0
+79 62 198 1 2 monster2 0
+80 105 198 1 2 monster2 0
+81 106 199 1 2 monster2 0
+82 110 197 1 2 monster2 0
+83 116 197 1 2 monster2 0
+84 120 199 1 2 monster2 0
+85 126 198 1 2 monster2 0
+86 142 18 1 2 monster2 0
+87 136 19 1 2 monster2 0
+88 132 17 1 2 monster2 0
+89 72 19 1 2 monster2 0

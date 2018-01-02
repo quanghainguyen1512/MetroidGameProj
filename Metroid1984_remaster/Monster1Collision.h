@@ -16,10 +16,18 @@ public:
 		int mode);
 	~Monster1Collision();
 
-	void OnCollisionEnter(string &tag);
+	bool OnCollisionEnter(string &tag);
 	void ImportTarget(int index);
+	void Orbit(int x, int y, int width, int height, int TargerX, int TargetY);
+	
 	void Climb(int x, int y, int width, int height);
+	void Fall(int x, int y, int width, int height, int targetX, int targety);
+	void LeftRight(int x, int y, int width, int height);
+	void Infinity(int x, int y, int width, int height);
+	void Follow(int x, int y, int width, int height);
+
 	int GetActiveArea(int index);
+
 
 	int getVX();
 	int getVY();
@@ -31,10 +39,12 @@ public:
 private:
 	int TargetIndex;
 	bool leftRight = false;
+	bool attack;
 
 	int vectorX;
 	int vectorY;
 	int spriteState;
+	int timeCount = 0;
 };
 
 #endif

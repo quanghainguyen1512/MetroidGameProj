@@ -103,6 +103,8 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 
 	collisionXTag = "";
 	collisionYTag = "";
+	MonsterXTag = "";
+	MonsterYTag = "";
 
 	height_limited = position.y - 50;
 	return true;
@@ -122,23 +124,8 @@ void Player::Update(float gameTime)
 		lastHeight = spriteHeight;
 		lastWidth = spriteWidth;
 
-		/*if (position.y<=height_limited)
-		{
-		directionY = 1;
-		Is_fall = true;
-		}*/
 		if (Is_jump == true && Is_air == true)
 		{
-			/*if (directionY < 1)
-			{
-			directionY += 0.15;
-			}
-			else
-			{
-			directionY = 1;
-			Is_fall = true;
-
-			}*/
 			directionY += 0.15;
 			if (directionY >= 0 && Is_stand == false)
 				Is_fall = true;
@@ -240,20 +227,19 @@ void Player::Update(float gameTime)
 		}
 		_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*directionX, velocity.y*directionY);
 
-		float remainTimeX = _collisionManager->RemainXtime(position.x, lastWidth, velocity.x*directionX, collisionXTag);
-		float remainTimeY = _collisionManager->RemainYtime(position.y, lastHeight, velocity.y*directionY, collisionYTag);
+		float remainTimeX = _collisionManager->RemainXtime(position.x, lastWidth, velocity.x*directionX, collisionXTag, MonsterXTag);
+		float remainTimeY = _collisionManager->RemainYtime(position.y, lastHeight, velocity.y*directionY, collisionYTag, MonsterYTag);
 
 		if (remainTimeX > 0)
 			position.x += velocity.x*(gameTime - remainTimeX)*directionX;
-		//position.x -= velocity.x*(gameTime)*direction;
 		else
 		{
 			position.x += velocity.x*(gameTime)*directionX;
 			collisionXTag = "";
+			//Is_BrickCollision = false;
 		}
 		if (remainTimeY > 0)
 			position.y += velocity.y*(gameTime - remainTimeY)*directionY;
-		//position.y -= velocity.y*(gameTime);
 		else
 		{
 			position.y += velocity.y*(gameTime)*directionY;
@@ -261,17 +247,10 @@ void Player::Update(float gameTime)
 			Is_air = true;
 			Is_fall = true;
 		}
-		/*position.x += velocity.x*(gameTime - remainTimeX)*direction;
-		position.y += velocity.y*(gameTime - remainTimeY);*/
-
-		if (collisionYTag != "" || collisionXTag != "")
+		if (collisionYTag != "" || collisionXTag != "" || MonsterXTag != "" || MonsterYTag != "")
 		{
 			UpdateBehavior();
 		}
-
-		//_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*directionX, velocity.y);
-
-		//_collisionManager->resetList();
 	}
 }
 
@@ -344,6 +323,7 @@ void Player::Draw(float gameTime)
 			break;
 		}
 	}
+	Is_BrickCollision = false;
 }
 
 Player::~Player()
@@ -411,13 +391,19 @@ void Player::ProcessKey(int keyDown)
 	{
 	case LEFT_ARROW:
 	{
-		directionX = -1;
-		last_directionX = directionX;
+		if (Is_BrickCollision == false)
+		{
+			directionX = -1;
+			last_directionX = directionX;
+		}
 	}break;
 	case RIGHT_ARROW:
 	{
-		directionX = 1;
-		last_directionX = directionX;
+		if (Is_BrickCollision == false)
+		{
+			directionX = 1;
+			last_directionX = directionX;
+		}
 	}break;
 	case UP_ARROW:
 	{
@@ -495,6 +481,15 @@ void Player::UpdateBehavior()
 			Is_fall = true;
 			directionY = 1;
 		}
+	}
+	if (collisionXTag == "brick")
+	{
+		Is_BrickCollision = true;
+		//directionX = 0;
+	}
+	if (MonsterXTag != "" || MonsterYTag != "")
+	{
+
 	}
 }
 

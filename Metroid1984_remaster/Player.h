@@ -52,6 +52,7 @@ protected:
 	bool Is_ground_spin = false;
 	bool Is_stand = true;
 	bool Is_air = true;
+	bool Is_BrickCollision = false;
 
 	float directionX = 0;
 	float last_directionX = 1;
@@ -68,6 +69,8 @@ protected:
 
 	string collisionXTag;
 	string collisionYTag;
+	string MonsterXTag;
+	string MonsterYTag;
 
 	int height_limited;
 };

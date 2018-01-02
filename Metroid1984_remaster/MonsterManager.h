@@ -2,6 +2,7 @@
 #define MONSTERMANAGER_H
 
 #include"Monster1.h"
+#include"Monster2.h"
 
 class MonsterManager
 {
@@ -18,8 +19,7 @@ public:
 	void draw(int index);
 	void drawAll();
 private:
-	vector<Monster1*> MList;
-	Monster1* getMonster(int i);
+	vector<GameObject*> MList;
 	CollisionManager* COM;
 	SpriteManager* SM;
 	GraphicsDevice* _gDevice;

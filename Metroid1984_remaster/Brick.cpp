@@ -12,15 +12,17 @@ Collision(stt, x, y, width, height, tag)
 	count = 0;
 }
 
-void Brick::OnCollisionEnter(string &tag)
+bool Brick::OnCollisionEnter(string &tag)
 {
 	if (Destroyable == true)
 	{
 		if (tag == "Bullet")
 		{
 			Active = false;
+			return true;
 		}
 	}
+	return false;
 }
 
 void Brick::ImportTarget(int M)

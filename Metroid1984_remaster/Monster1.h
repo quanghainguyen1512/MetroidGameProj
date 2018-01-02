@@ -24,8 +24,6 @@ public:
 	void Update(float gameTime);
 	void Draw(float gameTime);
 
-	void setLimitation(int x, int y, int width, int height);
-	void Order();
 	void setVector(int vectorx, int vectory);
 
 private:
@@ -39,12 +37,6 @@ private:
 	GameSprite* Right;
 	GameSprite* Left;
 
-	int limitX;
-	int limitY;
-	int limitWidth;
-	int limitHeight;
-
-	bool normal_motion;
 	bool left_right;
 
 	int vectorX;

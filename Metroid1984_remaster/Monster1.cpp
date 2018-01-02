@@ -91,11 +91,6 @@ void Monster1::Draw(float gameTime)
 	}
 }
 
-void Monster1::Order()
-{
-	
-}
-
 void Monster1::setVector(int vectorx, int vectory)
 {
 	vectorX = vectorx;

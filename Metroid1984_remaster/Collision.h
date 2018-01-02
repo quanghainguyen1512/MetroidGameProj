@@ -24,8 +24,9 @@ public:
 	float YCollisionTime(float y0, float height, Collision* P, float VelocityY);
 	float XCollisionTime(float x0, float width, Collision* P, float VelocityX);
 	
-	virtual void OnCollisionEnter(string &tag);
+	virtual bool OnCollisionEnter(string &tag);
 	virtual void ImportTarget(int M);
+	void reset();
 
 	string getTag();
 
@@ -47,6 +48,9 @@ protected:
 	int centerX;
 	int centerY;
 	
+	bool enter;
+	float enterTimeX;
+	float enterTimeY;
 
 };
 

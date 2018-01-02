@@ -39,8 +39,8 @@ public:
 
 	void refresh(vector<int> v, int camx, int camy, int camwidth, int camheight);
 
-	float RemainYtime(float y0, float height, float VelocityY, string& tag);
-	float RemainXtime(float x0, float width, float VelocityX, string& tag);
+	float RemainYtime(float y0, float height, float VelocityY, string& Bricktag, string& MonsterTag);
+	float RemainXtime(float x0, float width, float VelocityX, string& Bricktag, string& MonsterTag);
 
 	void MonsterAndBrick();
 

@@ -61,7 +61,7 @@ float CollisionManager::CheckCollision(float& normalx, float& normaly)
 	return min;
 }
 
-float CollisionManager::RemainYtime(float y0, float height, float VelocityY, string& tag)
+float CollisionManager::RemainYtime(float y0, float height, float VelocityY, string& Bricktag, string& MonsterTag)
 {
 	float min = 0;
 	float Btime[20];
@@ -70,6 +70,7 @@ float CollisionManager::RemainYtime(float y0, float height, float VelocityY, str
 	MonsterIndex = 0;
 	int brickIndex[20];
 	int monsterIndex[20];
+
 	for (int i = 0; i < CollisionList.size(); i++)
 	{
 		float result = BrickObject[CollisionList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
@@ -80,46 +81,52 @@ float CollisionManager::RemainYtime(float y0, float height, float VelocityY, str
 			BrickIndex++;
 
 		}
+		BrickObject[CollisionList[i]]->reset();
 	}
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
 		float result = MonsterObject[MonsterList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
-		if (result != 0)
+		if (MonsterObject[MonsterList[i]]->OnCollisionEnter(MonsterTag) == true)
+		{
+			MonsterTag = MonsterObject[MonsterList[i]]->getTag();
+		}
+		
+		/*if (result != 0)
 		{
 			Mtime[MonsterIndex] = result;
 			monsterIndex[MonsterIndex] = i;
 			MonsterIndex++;
 
-		}
+		}*/
 	}
 	if (BrickIndex > 0)
 	{
 		min = Btime[0];
-		tag = BrickObject[brickIndex[0]]->getTag();
+		Bricktag = BrickObject[brickIndex[0]]->getTag();
 	}
 	for (int i = 0; i < BrickIndex; i++)
 	{
 		if (Btime[i] < min)
 		{
 			min = Btime[i];
-			tag = BrickObject[brickIndex[i]]->getTag();
+			Bricktag = BrickObject[brickIndex[i]]->getTag();
 		}
 	}
-	for (int i = 0; i < MonsterIndex; i++)
+	/*for (int i = 0; i < MonsterIndex; i++)
 	{
 		if (Mtime[i] < min)
 		{
 			min = Mtime[i];
 			tag = MonsterObject[monsterIndex[i]]->getTag();
 		}
-	}
+	}*/
 	if (min < 0)
 		return 0;
 	else
 		return min;
 }
 
-float CollisionManager::RemainXtime(float x0, float width, float VelocityX, string& tag)
+float CollisionManager::RemainXtime(float x0, float width, float VelocityX, string& Bricktag, string& MonsterTag)
 {
 	float min = 0;
 	float Btime[20];
@@ -128,6 +135,7 @@ float CollisionManager::RemainXtime(float x0, float width, float VelocityX, stri
 	MonsterIndex = 0;
 	int brickIndex[20];
 	int monsterIndex[20];
+
 	for (int i = 0; i < CollisionList.size(); i++)
 	{
 		float result = BrickObject[CollisionList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
@@ -141,17 +149,22 @@ float CollisionManager::RemainXtime(float x0, float width, float VelocityX, stri
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
 		float result = MonsterObject[MonsterList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
-		if (result != 0)
+		if (MonsterObject[MonsterList[i]]->OnCollisionEnter(MonsterTag) == true)
+		{
+			MonsterTag = MonsterObject[MonsterList[i]]->getTag();
+		}
+		
+		/*if (result != 0)
 		{
 			Mtime[MonsterIndex] = result;
 			monsterIndex[MonsterIndex] = i;
 			MonsterIndex++;
-		}
+		}*/
 	}
 	if (BrickIndex > 0)
 	{
 		min = Btime[0];
-		tag = BrickObject[brickIndex[0]]->getTag();
+		Bricktag = BrickObject[brickIndex[0]]->getTag();
 	}
 
 	for (int i = 0; i < BrickIndex; i++)
@@ -159,17 +172,17 @@ float CollisionManager::RemainXtime(float x0, float width, float VelocityX, stri
 		if (Btime[i] < min)
 		{
 			min = Btime[i];
-			tag = BrickObject[brickIndex[i]]->getTag();
+			Bricktag = BrickObject[brickIndex[i]]->getTag();
 		}
 	}
-	for (int i = 0; i < MonsterIndex; i++)
+	/*for (int i = 0; i < MonsterIndex; i++)
 	{
 		if (Mtime[i] < min)
 		{
 			min = Mtime[i];
 			tag = MonsterObject[monsterIndex[i]]->getTag();
 		}
-	}
+	}*/
 	if (min < 0)
 		return 0;
 	else
@@ -227,7 +240,8 @@ void CollisionManager::refresh(vector<int> v, int camx, int camy, int camwidth, 
 					CollisionList.push_back(v[i]);
 					for (int e = 0; e < BrickObject[v[i]]->getCount(); e++)
 					{
-						MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
+						if (MonsterObject[BrickObject[v[i]]->getMonster(e)]->Active == true)
+							MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
 					}
 				}
 			}
@@ -242,7 +256,8 @@ void CollisionManager::refresh(vector<int> v, int camx, int camy, int camwidth, 
 					CollisionList.push_back(v[i]);
 					for (int e = 0; e < BrickObject[v[i]]->getCount(); e++)
 					{
-						MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
+						if (MonsterObject[BrickObject[v[i]]->getMonster(e)]->Active == true)
+							MonsterList.push_back(BrickObject[v[i]]->getMonster(e));
 					}
 				}
 			}
@@ -298,16 +313,31 @@ void CollisionManager::MonsterAndBrick()
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
 		//for (int e = 0; e < MonsterObject[MonsterList[i]]->count; e++)
-		int e = 0;
+		if (MonsterObject[MonsterList[i]]->Active==true)
 		{
-			int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getX();
-			int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getY();
-			int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getWidth();
-			int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getHeight();
+			if (MonsterObject[MonsterList[i]]->getTag() == "monster1")
+			{
+				int e = 0;
+				{
+					int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getX();
+					int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getY();
+					int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getWidth();
+					int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getHeight();
 
-			MonsterObject[MonsterList[i]]->Climb(x, y, width, height);
+					MonsterObject[MonsterList[i]]->Climb(x, y, width, height);
+				}
+			}
+			else if (MonsterObject[MonsterList[i]]->getTag() == "monster2")
+			{
+				int e = MonsterObject[MonsterList[i]]->count;
+				int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getX();
+				int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getY();
+				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
+				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
+
+				MonsterObject[MonsterList[i]]->Fall(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
+			}
 		}
-
 	}
 }
 

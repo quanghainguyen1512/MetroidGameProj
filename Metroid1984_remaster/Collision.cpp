@@ -11,6 +11,9 @@ Collision::Collision(int stt,float x, float y, float width, float height, string
 	_tag = tag;
 	_stt = stt;
 
+	centerX = x + width / 2;
+	centerY = y + height / 2;
+
 	Active = true;
 }
 
@@ -132,18 +135,21 @@ float Collision::YCollisionTime(float y0, float height, Collision* P, float Velo
 		P->_x < _x + _width + _velocityX&&_x + _width + _velocityX < P->_x + P->_width ||
 		_x + _velocityX < P->_x&&P->_x < _x + _width + _velocityX)
 	{
+		enter = true;
 		if (VelocityY > 0)
 		{
 			if (y0 + height <= _y + _velocityY&&_y + _velocityY < P->_y + P->_height)
 			{
-				return (P->_y + P->_height - (_y + _velocityY)) / VelocityY;
+				enterTimeY = (P->_y + P->_height - (_y + _velocityY)) / VelocityY;
+				return enterTimeY;
 			}
 		}
 		else if (VelocityY < 0)
 		{
 			if (P->_y < _y + _height + _velocityY&&_y + _height + _velocityY <= y0)
 			{
-				return(P->_y - (_height + _y + _velocityY)) / (VelocityY);
+				enterTimeY = (P->_y - (_height + _y + _velocityY)) / (VelocityY);
+				return enterTimeY;
 			}
 		}
 	}
@@ -156,26 +162,31 @@ float Collision::XCollisionTime(float x0, float width, Collision* P, float Veloc
 		P->_y < _y + _height + _velocityY &&_y + _height + _velocityY < P->_y + P->_height ||
 		_y + _velocityY < P->_y && P->_y < _y + _height + _velocityY)
 	{
+		enter = true;
 		if (VelocityX > 0)
 		{
 			if (x0 + width <= _x + _velocityX && _x + _velocityX < P->_x + P->_width)
 			{
-				return ((P->_x + P->_width) - (_x + _velocityX)) / (VelocityX);
+				enterTimeX = ((P->_x + P->_width) - (_x + _velocityX)) / (VelocityX);
+				return enterTimeX;
 			}
 		}
 		else if (VelocityX < 0)
 		{
 			if (P->_x < _x + _width + _velocityX && _x + _width + _velocityX <= x0)
 			{
-				return ((_x + _width + _velocityX) - P->_x) / (-VelocityX);
+				enterTimeX=((_x + _width + _velocityX) - P->_x) / (-VelocityX);
+				return enterTimeX;
 			}
 		}
 	}
 	return 0;
 }
 
-void Collision::OnCollisionEnter(string &tag)
-{}
+bool Collision::OnCollisionEnter(string &tag)
+{
+	return false;
+}
 
 string Collision::getTag()
 {
@@ -199,6 +210,13 @@ int Collision::getWidth()
 	return _width;
 }
 void Collision::ImportTarget(int target){}
+
+void Collision::reset()
+{
+	enterTimeX = 0;
+	enterTimeY = 0;
+	enter = false;
+}
 
 Collision::~Collision()
 {

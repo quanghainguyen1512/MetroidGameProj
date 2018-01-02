@@ -14,7 +14,7 @@ public:
 		float height, 
 		string tag);
 	~Brick();
-	void OnCollisionEnter(string &tag);
+	bool OnCollisionEnter(string &tag);
 
 	void ImportTarget(int M);
 	int getMonster(int index);

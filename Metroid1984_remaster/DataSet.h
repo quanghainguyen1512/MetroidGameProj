@@ -15,35 +15,7 @@
 #define FILE "Metroid_sprite_motion_2.png"
 
 ////Coordinates in sprite
-//#define RIGHT_MOVE_X 0
-//#define RIGHT_MOVE_Y 0
-//
-//#define LEFT_MOVE_X 0
-//#define LEFT_MOVE_Y 38
-//
-//#define RIGHT_JUMP_X 300
-//#define RIGHT_JUMP_Y 0
-//
-//#define LEFT_JUMP_X 300
-//#define LEFT_JUMP_Y 38
-//
-//#define RIGHT_JUMP_SPIN_X 100
-//#define RIGHT_JUMP_SPIN_Y 0
-//
-//#define LEFT_JUMP_SPIN_X 100
-//#define LEFT_JUMP_SPIN_Y 38
-//
-//#define RIGHT_GROUND_SPIN_X 200
-//#define RIGHT_GROUND_SPIN_Y 24
-//
-//#define LEFT_GROUND_SPIN_X 200
-//#define LEFT_GROUND_SPIN_Y 62
-//
-//#define RIGHT_STAND_X 75
-//#define RIGHT_STAND_Y 0
-//
-//#define LEFT_STAND_X 75
-//#define LEFT_STAND_Y 38
+
 
 // Size of a frame
 #define NORMAL_WIDTH 24
