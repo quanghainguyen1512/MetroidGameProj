@@ -87,5 +87,10 @@ void KeyBoard::OnKeyDown(int KeyCode)
 		_player->jump();
 		break;
 	}
+	case DIK_Z:
+	{
+		_player->Shoot();
+		break;
+	}
 	}
 }

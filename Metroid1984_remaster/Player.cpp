@@ -4,6 +4,9 @@ Player::Player(float x, float y, float rotation, float speed, float maxSpeed, Co
 GameObject(x, y, rotation, speed, maxSpeed, collisionManager, spritemanager, gDevice)
 {
 	velocity.y = 0.15f;
+	bulletCount = 5;
+	shootable = true;
+	bulletIndex = 0;
 }
 
 bool Player::Initialize(LPDIRECT3DDEVICE9 device)
@@ -94,6 +97,9 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 		}
 	}
 
+	if (CreateBullet() == false)
+		return false;
+
 	Is_initialzed = true;
 	spriteID = 4; 
 	ActionID = 2;
@@ -144,6 +150,7 @@ void Player::Update(float gameTime)
 				ActionID = 2;
 				spriteWidth = Right_jump->getWidth();
 				spriteHeight = Right_jump->getHeight();
+				shootable = true;
 				//Is_air = true;
 			}
 			else if (Is_fall == true && directionX != 0 && Is_air == true && directionY > 0)
@@ -153,6 +160,7 @@ void Player::Update(float gameTime)
 				ActionID = 2;
 				spriteWidth = Right_jump_spin->getWidth();
 				spriteHeight = Right_jump_spin->getHeight();
+				shootable = false;
 				//Is_air = true;
 			}
 			else if (Is_ground_spin == true)
@@ -162,6 +170,7 @@ void Player::Update(float gameTime)
 				ActionID = 0;
 				spriteWidth = Right_ground_spin->getWidth();
 				spriteHeight = Right_ground_spin->getHeight();
+				shootable = false;
 			}
 			else if (directionX != 0 && Is_air == false)
 			{
@@ -170,6 +179,7 @@ void Player::Update(float gameTime)
 				ActionID = 0;
 				spriteWidth = Right_move->getWidth();
 				spriteHeight = Right_move->getHeight();
+				shootable = true;
 			}
 			else if (Is_stand == true)
 			{
@@ -178,6 +188,7 @@ void Player::Update(float gameTime)
 				ActionID = 3;
 				spriteWidth = Right_stand->getWidth();
 				spriteHeight = Right_stand->getHeight();
+				shootable = true;
 			}
 		}
 		if (last_directionX == -1)
@@ -189,6 +200,7 @@ void Player::Update(float gameTime)
 				ActionID = 2;
 				spriteWidth = Left_jump->getWidth();
 				spriteHeight = Left_jump->getHeight();
+				shootable = true;
 				//Is_air = true;
 			}
 			else if (Is_fall == true && directionX != 0 && Is_air == true && directionY > 0)
@@ -198,6 +210,7 @@ void Player::Update(float gameTime)
 				ActionID = 2;
 				spriteWidth = Left_jump_spin->getWidth();
 				spriteHeight = Left_jump_spin->getHeight();
+				shootable = false;
 				//Is_air = true;
 			}
 			else if (Is_ground_spin == true)
@@ -207,6 +220,7 @@ void Player::Update(float gameTime)
 				ActionID = 1;
 				spriteWidth = Left_ground_spin->getWidth();
 				spriteHeight = Left_ground_spin->getHeight();
+				shootable = false;
 			}
 			else if (directionX != 0 && Is_air == false)
 			{
@@ -215,6 +229,7 @@ void Player::Update(float gameTime)
 				ActionID = 1;
 				spriteWidth = Left_move->getWidth();
 				spriteHeight = Left_move->getHeight();
+				shootable = true;
 			}
 			else if (Is_stand == true)
 			{
@@ -223,6 +238,7 @@ void Player::Update(float gameTime)
 				ActionID = 3;
 				spriteWidth = Left_stand->getWidth();
 				spriteHeight = Left_stand->getHeight();
+				shootable = true;
 			}
 		}
 		_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*directionX, velocity.y*directionY);
@@ -251,6 +267,8 @@ void Player::Update(float gameTime)
 		{
 			UpdateBehavior();
 		}
+
+		BulletControl();
 	}
 }
 
@@ -323,6 +341,9 @@ void Player::Draw(float gameTime)
 			break;
 		}
 	}
+
+	DrawBullet();
+
 	Is_BrickCollision = false;
 }
 
@@ -454,6 +475,8 @@ void Player::ProcessKey(int keyDown)
 	case UNKEY:
 	{
 		directionX = 0;
+		countDown = 2;
+		timeShot = 0;
 	}
 	default:
 	{
@@ -503,5 +526,61 @@ void Player::jump()
 		Is_air = true;
 		Is_stand = false;
 		position.y -= 10;
+	}
+}
+
+bool Player::CreateBullet()
+{
+	for (int i = 0; i < bulletCount; i++)
+	{
+		Bullet* b = new Bullet(position.x, position.y, _rotation, _speed, _MaxSpeed, _collisionManager, _spriteManager, _gDevice);
+		if (b->Initialize(_gDevice->device) == false)
+			return false;
+		bulletList.push_back(b);
+	}
+	return true;
+}
+
+void Player::Shoot()
+{
+	if (shootable == true)
+	{
+		if (timeShot%countDown == 0)
+		{
+			bulletList[bulletIndex]->SetVector(last_directionX, 0, velocity.x, velocity.y);
+			if (last_directionX == 1)
+				bulletList[bulletIndex]->UpdatePosition(position.x + spriteWidth - 5, position.y + 8);
+			else if (last_directionX == -1)
+				bulletList[bulletIndex]->UpdatePosition(position.x, position.y + 8);
+			bulletList[bulletIndex]->Update(0);
+			bulletList[bulletIndex]->active = true;
+			bulletIndex++;
+			if (bulletIndex > 4)
+				bulletIndex = 0;
+
+		}
+		timeShot++;
+	}
+}
+
+void Player::BulletControl()
+{
+	for (int i = 0; i < bulletCount; i++)
+	{
+		if (bulletList[i]->active == true)
+		{
+			bulletList[i]->Update(0);
+		}
+	}
+}
+
+void Player::DrawBullet()
+{
+	for (int i = 0; i < bulletCount; i++)
+	{
+		if (bulletList[i]->active == true)
+		{
+			bulletList[i]->Draw(0);
+		}
 	}
 }

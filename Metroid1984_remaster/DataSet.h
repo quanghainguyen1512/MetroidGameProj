@@ -8,6 +8,7 @@
 #define DOWN_ARROW 4
 #define UNKEY 0
 #define SPACE_BUTTON 5
+#define SHOOT_BUTTON 6
 #define GOD_MODE 100
 
 
@@ -36,6 +37,7 @@
 #define MONSTER2_COUNT 2
 #define MONSTER3_COUNT 1
 #define MONSTER4_COUNT 1
+#define BULLET_COUNT 1 
 
 #define RIGHT_MOVE_INDEX 0
 #define LEFT_MOVE_INDEX 3
@@ -55,3 +57,4 @@
 #define MONSTER2_INDEX 41 
 #define MONSTER3_INDEX 43
 #define MONSTER4_INDEX 44
+#define BULLET_INDEX 45

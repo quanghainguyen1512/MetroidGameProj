@@ -23,8 +23,7 @@ bool Monster4::Initialize(LPDIRECT3DDEVICE9 device)
 		if (!Move->initialize(device, _gDevice->getCharaterTex(), MONSTER4_INDEX, MONSTER4_COUNT))
 			return false;
 	}
-
-	return false;
+	return true;
 }
 
 void Monster4::Update(float gameTime)

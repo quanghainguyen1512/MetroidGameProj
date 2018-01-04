@@ -84,6 +84,9 @@
     <ClCompile Include="Monster4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicDevice.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Monster4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

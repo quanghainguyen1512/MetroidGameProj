@@ -47,10 +47,10 @@ protected:
 	float _rotation;
 	float _speed;
 	ObjectStatus status;
-
+	float _MaxSpeed;
 	CollisionManager* _collisionManager;
 private:
-	float _MaxSpeed;
+	
 
 	GameSprite* _Gs;
 

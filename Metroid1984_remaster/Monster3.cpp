@@ -16,15 +16,13 @@ GameObject(x, y, rotation, speed, maxSpeed, collisionManager, spritemanager, gDe
 bool Monster3::Initialize(LPDIRECT3DDEVICE9 device)
 {
 	status = ObjectStatus::Active;
-
 	if (!Move)
 	{
 		Move = new GameSprite(_spriteManager);
 		if (!Move->initialize(device, _gDevice->getCharaterTex(), MONSTER3_INDEX, MONSTER3_COUNT))
 			return false;
 	}
-
-	return false;
+	return true;
 }
 
 void Monster3::Update(float gameTime)

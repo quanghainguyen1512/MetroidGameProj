@@ -29,7 +29,7 @@ bool Monster2::Initialize(LPDIRECT3DDEVICE9 device)
 			return false;
 	}
 
-	return false;
+	return true;
 }
 
 void Monster2::Update(float gameTime)
