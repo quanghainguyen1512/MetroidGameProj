@@ -6,13 +6,20 @@
 class Player : public GameObject
 {
 public:
-	Player(float x, float y, float rotation, float speed, float maxSpeed);
+	Player(
+		float x, 
+		float y, 
+		float rotation, 
+		float speed, 
+		float maxSpeed, 
+		CollisionManager* collisionManager, 
+		SpriteManager* spritemanager, 
+		GraphicsDevice* gDevice);
 	~Player();
 
-	virtual bool Initialize(LPDIRECT3DDEVICE9 device);
-	virtual void Update(float gameTime);
-	virtual void Draw(float gameTime);
-	
+	bool Initialize(LPDIRECT3DDEVICE9 device);
+	void Update(float gameTime);
+	void Draw(float gameTime);
 	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	void OnKeyDown(int keyCode);
@@ -22,9 +29,10 @@ public:
 	bool InitializeFlag();
 	D3DXVECTOR3 GetPosition();
 
-protected:
+	void UpdateBehavior();
+	void jump();
 
-	LPDIRECT3DTEXTURE9 tex;
+protected:
 
 	GameSprite* Right_move;
 	GameSprite* Left_move;
@@ -43,10 +51,28 @@ protected:
 	bool Is_run = false;
 	bool Is_ground_spin = false;
 	bool Is_stand = true;
+	bool Is_air = true;
+	bool Is_BrickCollision = false;
 
-	int direction = 0;
-	int last_direction = 1;
+	float directionX = 0;
+	float last_directionX = 1;
+	float directionY = 1;
+	float last_directionY = 1;
 
+	int ActionID;
+	int spriteID;
+
+	int spriteWidth;
+	int spriteHeight;
+	int lastWidth;
+	int lastHeight;
+
+	string collisionXTag;
+	string collisionYTag;
+	string MonsterXTag;
+	string MonsterYTag;
+
+	int height_limited;
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include"GamePlayObject.h"
 
-GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed)
+GameObject::GameObject(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, SpriteManager* spritemanager, GraphicsDevice* gDevice)
 {
 	float twopi = pi * 2;
 	position.x = x;
@@ -25,6 +25,10 @@ GameObject::GameObject(float x, float y, float rotation, float speed, float maxS
 	velocity.z = 0;
 
 	_MaxSpeed = maxSpeed;
+
+	_collisionManager = collisionManager;
+	_spriteManager = spritemanager;
+	_gDevice = gDevice;
 }
 
 bool GameObject::Initialize(LPDIRECT3DDEVICE9 device)
@@ -54,6 +58,11 @@ void GameObject::SetSpeed(float speed)
 		velocity.y = sin(_rotation)*speed;
 		velocity.z = 0;
 	}
+}
+
+D3DXVECTOR3 GameObject::getPosition()
+{
+	return position;
 }
 GameObject::~GameObject()
 {

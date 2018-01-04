@@ -1,26 +1,31 @@
 #include"GameSprite.h"
 
-GameSprite::GameSprite()
+GameSprite::GameSprite(SpriteManager* data)
 {
 	//gan gia tri cho color ( he mau trong suot )
 
+	_data = data;
 	color = D3DCOLOR_ARGB(255, 255, 255, 255);
 
 	initialized = false;
 }
 
 
-bool GameSprite::initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 tex , int XInTexture, int yInTexture, int width, int height, int count)
+bool GameSprite::initialize(LPDIRECT3DDEVICE9 device, LPDIRECT3DTEXTURE9 tex , int indexInData, int count)
 {
 	//Lay thong tin tu file hinh goc
 
 	_tex = tex;
-	start_x = XInTexture;
-	start_y = yInTexture;
-	_width = width;
-	_height = height;
+	startIndex = indexInData;
+	index = startIndex;
 	_count = count;
-	// khoi tao Texture
+
+	x = _data->getCoordinate(startIndex)->_xInTexture;
+	y = _data->getCoordinate(startIndex)->_yInTexture;
+	_width = _data->getCoordinate(startIndex)->_width;
+	_height = _data->getCoordinate(startIndex)->_height;
+
+	// khoi tao Sprite
 
 	if (!SUCCEEDED(D3DXCreateSprite(device, &sprite)))
 	{
@@ -41,12 +46,9 @@ bool GameSprite::IsInitialize()
 void GameSprite::Update(float gameTime)
 {
 	//cap nhap sprite de co chuyen dong
-
-	x = start_x + index*_width;
-	y = start_y;
 	index++;
-	if (index == _count)
-		index = 0;
+	if (index == _count + startIndex)
+		index = startIndex;
 }
 
 void GameSprite::Draw(float gameTime, D3DXVECTOR3 position)
@@ -56,8 +58,24 @@ void GameSprite::Draw(float gameTime, D3DXVECTOR3 position)
 	if (sprite && _tex)
 	{
 		RECT srect;
-		srect.left = x;
-		srect.top = y;
+		srect.left = _data->getCoordinate(index)->_xInTexture;
+		srect.top = _data->getCoordinate(index)->_yInTexture;
+		srect.right = srect.left + _data->getCoordinate(index)->_width;
+		srect.bottom = srect.top + _data->getCoordinate(index)->_height;
+
+		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+		sprite->Draw(_tex, &srect, NULL, &position, color);
+		sprite->End();
+	}
+}
+
+void GameSprite::Draw(int XInTexture, int yInTexture, int width, int height, D3DXVECTOR3 position)
+{
+	if (sprite && _tex)
+	{
+		RECT srect;
+		srect.left = XInTexture;
+		srect.top = yInTexture;
 		srect.right = srect.left + _width;
 		srect.bottom = srect.top + _height;
 
@@ -67,6 +85,15 @@ void GameSprite::Draw(float gameTime, D3DXVECTOR3 position)
 	}
 }
 
+float GameSprite::getWidth()
+{
+	return _data->getCoordinate(index)->_width;
+}
+float GameSprite::getHeight()
+{
+	return _data->getCoordinate(index)->_height;
+}
+
 GameSprite::~GameSprite()
 {
 	if (sprite)
@@ -74,9 +101,9 @@ GameSprite::~GameSprite()
 		sprite->Release();
 		sprite = 0;
 	}
-	if (_tex)
+	/*if (_tex)
 	{
 		_tex->Release();
 		_tex = 0;
-	}
+	}*/
 }

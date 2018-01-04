@@ -1,7 +1,8 @@
 #include"KeyBoard.h"
 
-KeyBoard::KeyBoard()
+KeyBoard::KeyBoard(Player* player)
 {
+	_player = player;
 }
 
 KeyBoard::~KeyBoard()
@@ -77,4 +78,14 @@ int KeyBoard::IsKeyDown(int KeyCode)
 }
 
 void KeyBoard::OnKeyUp(int KeyCode) { }
-void KeyBoard::OnKeyDown(int KeyCode) { }
+void KeyBoard::OnKeyDown(int KeyCode)
+{
+	switch (KeyCode)
+	{
+	case DIK_SPACE:
+	{
+		_player->jump();
+		break;
+	}
+	}
+}
