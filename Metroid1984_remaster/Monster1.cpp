@@ -45,6 +45,12 @@ bool Monster1::Initialize(LPDIRECT3DDEVICE9 device)
 		if (!Right->initialize(device, _gDevice->getCharaterTex(), MONSTER1_RIGHT_INDEX, MONSTER1_COUNT))
 			return false;
 	}
+	if (!Explosion)
+	{
+		Explosion = new GameSprite(_spriteManager);
+		if (!Explosion->initialize(device, _gDevice->getCharaterTex(), EXPLOSION_INDEX, EXPLOSION_COUNT))
+			return false;
+	}
 
 	return true;
 }
@@ -53,21 +59,40 @@ void Monster1::Update(float gameTime)
 {
 	vectorX = _collisionManager->getMonster(Monster1CollisionIndex)->getVX();
 	vectorY = _collisionManager->getMonster(Monster1CollisionIndex)->getVY();
-	spriteState = _collisionManager->getMonster(Monster1CollisionIndex)->getST();
+	if (Destroy == false)
+		spriteState = _collisionManager->getMonster(Monster1CollisionIndex)->getST();
 
 	position.x += vectorX*velocity.x;
 	position.y += vectorY*velocity.y;
 	_collisionManager->UpdateMonsterCol(Monster1CollisionIndex, position.x, position.y, velocity.x, velocity.y);
+
+	if (spriteState == -1)
+	{
+		Destroy = true;
+	}
+	if (Destroy == true)
+	{
+		Explosion->Update(gameTime);
+		spriteCount++;
+	}
+	if (spriteCount > 2)
+	{
+		_collisionManager->getMonster(Monster1CollisionIndex)->Active = false;
+	}
 }
 
 void Monster1::Draw(float gameTime)
 {
 	switch (spriteState)
 	{
+	case -1:
+	{
+		Explosion->Draw(gameTime, position);
+		break;
+	}
 	case 0:
 	{
-		Right->Draw(gameTime, position);
-		
+		Right->Draw(gameTime, position);	
 		break;
 	}
 	case 1:

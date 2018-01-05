@@ -28,6 +28,12 @@ bool Monster2::Initialize(LPDIRECT3DDEVICE9 device)
 		if (!Spin->initialize(device, _gDevice->getCharaterTex(), MONSTER2_INDEX, MONSTER2_COUNT))
 			return false;
 	}
+	if (!Explosion)
+	{
+		Explosion = new GameSprite(_spriteManager);
+		if (!Explosion->initialize(device, _gDevice->getCharaterTex(), EXPLOSION_INDEX, EXPLOSION_COUNT))
+			return false;
+	}
 
 	return true;
 }
@@ -37,26 +43,49 @@ void Monster2::Update(float gameTime)
 	vectorX = _collisionManager->getMonster(Monster2CollisionIndex)->getVX();
 	vectorY = _collisionManager->getMonster(Monster2CollisionIndex)->getVY();
 	Is_attack = _collisionManager->getMonster(Monster2CollisionIndex)->getST();
+	if (Destroy == false)
+		spriteState = _collisionManager->getMonster(Monster2CollisionIndex)->getST();
 
 	position.x += vectorX*velocity.x;
 	position.y += vectorY*velocity.y;
 	_collisionManager->UpdateMonsterCol(Monster2CollisionIndex, position.x, position.y, velocity.x, velocity.y);
-	
+
 	timecount++;
-	if (Is_attack == false)
+
+	if (spriteState == -1)
 	{
-		if (timecount % StaticTime == 0)
+		Destroy = true;
+	}
+	else
+	{
+		if (Is_attack == false)
+		{
+			if (timecount % StaticTime == 0)
+			{
+				Spin->Update(gameTime);
+			}
+		}
+		else
 		{
 			Spin->Update(gameTime);
 		}
 	}
-	else
+	if (Destroy == true)
 	{
-		Spin->Update(gameTime);
+		Explosion->Update(gameTime);
+		spriteCount++;
+	}
+	if (spriteCount >= 2)
+	{
+		_collisionManager->getMonster(Monster2CollisionIndex)->Active = false;
 	}
 }
 
 void Monster2::Draw(float gameTime)
 {
+	if (spriteState == -1)
+	{
+		Explosion->Draw(gameTime, position);
+	}
 	Spin->Draw(gameTime, position);
 }

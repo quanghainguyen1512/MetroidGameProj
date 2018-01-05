@@ -4,22 +4,22 @@
 #include"GamePlayObject.h"
 #include"DataSet.h"
 
-class Monster2:public GameObject
+class Monster2 :public GameObject
 {
 public:
-	 Monster2(
-		 int stt,
-		 float x,
-		 float y,
-		 float rotation,
-		 float speed,
-		 float maxSpeed,
-		 CollisionManager* collisionManager,
-		 SpriteManager* spritemanager,
-		 GraphicsDevice* gDevice,
-		 string type,
-		 int mode);
-	~ Monster2();
+	Monster2(
+		int stt,
+		float x,
+		float y,
+		float rotation,
+		float speed,
+		float maxSpeed,
+		CollisionManager* collisionManager,
+		SpriteManager* spritemanager,
+		GraphicsDevice* gDevice,
+		string type,
+		int mode);
+	~Monster2();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
 	void Update(float gameTime);
@@ -32,12 +32,16 @@ private:
 	int _stt;
 
 	GameSprite* Spin;
+	GameSprite* Explosion;
 
 	int vectorX;
 	int vectorY;
 	int StaticTime;
 	int timecount;
 	bool Is_attack;
+	int spriteState;
+	bool Destroy = false;
+	int spriteCount = 0;
 };
 
 #endif

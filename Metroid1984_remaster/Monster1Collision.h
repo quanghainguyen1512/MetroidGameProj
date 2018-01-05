@@ -1,9 +1,9 @@
 #ifndef MONSTER1COLLISION_H
 #define MONSTER1COLLISION_H
 
-#include"Collision.h"
+#include"MonsterCollision.h"
 
-class  Monster1Collision :public Collision
+class  Monster1Collision :public MonsterCollision
 {
 public:
 	Monster1Collision(
@@ -17,38 +17,13 @@ public:
 	~Monster1Collision();
 
 	bool OnCollisionEnter(string &tag);
-	void ImportTarget(int index);
 	void Orbit(int x, int y, int width, int height, int TargerX, int TargetY);
-	
-	void Climb(int x, int y, int width, int height);
-	void Fall(int x, int y, int width, int height, int targetX, int targetY);
-	void LeftRight(int x, int y, int width, int height);
-	void Infinity(int x, int y, int width, int height, int targetX, int targetY);
-	//void Follow(int x, int y, int width, int height);
-
-	int GetActiveArea(int index);
-
-	void SetLimitation(int x, int y, int width, int height);
-
-	int getVX();
-	int getVY();
 	int getST();
 	
-	int ActivateBrickIndex[5];
-	int count;
+	void Climb(int x, int y, int width, int height);
 
 private:
-	int TargetIndex;
-	bool leftRight = false;
-	bool attack;
 
-	int vectorX;
-	int vectorY;
-	int spriteState;
-	int timeCount = 0;
-	
-	int maxX;
-	int minX;
 };
 
 #endif

@@ -3,6 +3,9 @@
 
 #include"Brick.h" 
 #include"Monster1Collision.h"
+#include"Monster2Collision.h"
+#include"Monster3Collision.h"
+#include"Monster4Collision.h"
 #include"BulletCollision.h"
 #include<vector>
 #include<string>
@@ -51,7 +54,7 @@ public:
 	int FixX();
 	int FixY();
 
-	Monster1Collision* getMonster(int index);
+	MonsterCollision* getMonster(int index);
 	bool getBulletActive(int i);
 	
 	vector<int> MonsterList;
@@ -60,7 +63,7 @@ public:
 protected:
 	Collision* PlayerCol;
 	vector<Brick*> BrickObject;
-	vector<Monster1Collision*> MonsterObject;
+	vector<MonsterCollision*> MonsterObject;
 	vector<BulletCollision*>BulletList;
 	QuadTree* _quadTree;
 

@@ -203,7 +203,7 @@ void Player::Update(float gameTime)
 			{	
 				hightjumpcount++;
 				if (hightjumpcount==2)
-					directionY -= 1.75;
+					directionY -= 2.0;
 			}
 			if (directionY >= 0 && Is_stand == false)
 				Is_fall = true;

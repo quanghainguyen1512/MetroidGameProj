@@ -36,12 +36,15 @@ private:
 	GameSprite* Down;
 	GameSprite* Right;
 	GameSprite* Left;
+	GameSprite* Explosion;
 
 	bool left_right;
 
 	int vectorX;
 	int vectorY;
 	int spriteState;
+	int spriteCount = 0;
+	bool Destroy = false;
 };
 
 #endif

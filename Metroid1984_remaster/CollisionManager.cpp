@@ -274,7 +274,7 @@ void CollisionManager::resetList()
 	CollisionList.clear();
 	MonsterList.clear();
 }
-Monster1Collision* CollisionManager::getMonster(int index)
+MonsterCollision* CollisionManager::getMonster(int index)
 {
 	return MonsterObject[index];
 }
@@ -300,8 +300,26 @@ void CollisionManager::ReadMonsterData(string fileName)
 }
 void CollisionManager::ImportMonsterCollision(int stt, float x, float y, float width, float height, string tag, int mode)
 {
-	Monster1Collision* M = new Monster1Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
-	MonsterObject.push_back(M);
+	if (tag == "monster1")
+	{
+		MonsterCollision* M = new Monster1Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
+		MonsterObject.push_back(M);
+	}
+	else if (tag == "monster2")
+	{
+		MonsterCollision* M = new Monster2Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
+		MonsterObject.push_back(M);
+	}
+	else if (tag == "monster3")
+	{
+		MonsterCollision* M = new Monster3Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
+		MonsterObject.push_back(M);
+	}
+	else if (tag == "monster4")
+	{
+		MonsterCollision* M = new Monster4Collision(stt, x * 16, y * 16, width * 16, height * 16, tag, mode);
+		MonsterObject.push_back(M);
+	}
 }
 void CollisionManager::UpdateMonsterCol(int stt, float x, float y, float velocityX, float velocityY)
 {
@@ -323,7 +341,7 @@ void CollisionManager::MonsterAndBrick()
 					int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getWidth();
 					int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e]]->getHeight();
 
-					MonsterObject[MonsterList[i]]->Climb(x, y, width, height);
+					MonsterObject[MonsterList[i]]->Orbit(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
 				}
 			}
 			else if (MonsterObject[MonsterList[i]]->getTag() == "monster2")
@@ -334,7 +352,7 @@ void CollisionManager::MonsterAndBrick()
 				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
 				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
 
-				MonsterObject[MonsterList[i]]->Fall(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
+				MonsterObject[MonsterList[i]]->Orbit(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
 			}
 			else if (MonsterObject[MonsterList[i]]->getTag() == "monster3")
 			{
@@ -344,7 +362,7 @@ void CollisionManager::MonsterAndBrick()
 				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
 				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
 
-				MonsterObject[MonsterList[i]]->LeftRight(x, y, width, height);
+				MonsterObject[MonsterList[i]]->Orbit(x, y, width, height, PlayerCol->getX(), PlayerCol->getY());
 			}
 			else if (MonsterObject[MonsterList[i]]->getTag() == "monster4")
 			{
@@ -354,7 +372,7 @@ void CollisionManager::MonsterAndBrick()
 				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
 				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
 
-				MonsterObject[MonsterList[i]]->Infinity(x, y, width, height,PlayerCol->getX(),PlayerCol->getY());
+				MonsterObject[MonsterList[i]]->Orbit(x, y, width, height,PlayerCol->getX(),PlayerCol->getY());
 			}
 		}
 	}

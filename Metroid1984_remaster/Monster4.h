@@ -32,9 +32,13 @@ private:
 	int _stt;
 
 	GameSprite* Move;
+	GameSprite* Explosion;
 
 	int vectorX;
 	int vectorY;
+	int spriteState;
+	int spriteCount = 0;
+	bool Destroy = false;
 };
 
 #endif
