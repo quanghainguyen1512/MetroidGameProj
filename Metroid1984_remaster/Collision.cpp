@@ -13,8 +13,10 @@ Collision::Collision(int stt,float x, float y, float width, float height, string
 
 	centerX = x + width / 2;
 	centerY = y + height / 2;
+
 	startX = x;
 	startY = y;
+
 	Active = true;
 }
 
@@ -217,6 +219,15 @@ void Collision::reset()
 	enterTimeX = 0;
 	enterTimeY = 0;
 	enter = false;
+}
+
+bool Collision::CheckCollision(float x, float y, float width, float height)
+{
+	if (!(_y + _height<y || _y>y + height)&&!(_x+_width<x||_x>x+width))
+	{
+		return true;
+	}
+	return false;
 }
 
 Collision::~Collision()

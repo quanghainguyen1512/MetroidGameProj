@@ -3,6 +3,7 @@
 
 #include"Brick.h" 
 #include"Monster1Collision.h"
+#include"BulletCollision.h"
 #include<vector>
 #include<string>
 #include<fstream>
@@ -25,10 +26,12 @@ public:
 	void ImportQuadTree(QuadTree* Q);
 	void ImportCollision(int stt,float x, float y, float width, float height, string tag);
 	void ImportMonsterCollision(int stt, float x, float y, float width, float hegith, string tag, int mode);
+	void ImportBulletCollision(int stt, float x, float y, float width, float height);
 	void ImportPlayerCol(float x, float y, float width, float height);
 	
 	void UpdatePlayerCol(float x, float y, float width, float height, float velocityx, float velocityy);
 	void UpdateMonsterCol(int stt, float x, float y, float velocityX, float velocityY);
+	void UpdateBulletCol(int stt, float x, float y, float velocityX, float velocityY,bool active);
 	void resetList();
 
 	void SetLimitation(int x, int y);
@@ -43,11 +46,13 @@ public:
 	float RemainXtime(float x0, float width, float VelocityX, string& Bricktag, string& MonsterTag);
 
 	void MonsterAndBrick();
+	void BulletProcess();
 
 	int FixX();
 	int FixY();
 
 	Monster1Collision* getMonster(int index);
+	bool getBulletActive(int i);
 	
 	vector<int> MonsterList;
 	vector<int> CollisionList;
@@ -56,7 +61,7 @@ protected:
 	Collision* PlayerCol;
 	vector<Brick*> BrickObject;
 	vector<Monster1Collision*> MonsterObject;
-	
+	vector<BulletCollision*>BulletList;
 	QuadTree* _quadTree;
 
 	int BrickIndex;

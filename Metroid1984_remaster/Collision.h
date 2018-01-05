@@ -36,6 +36,9 @@ public:
 	int getHeight();
 	
 	bool Active;
+
+	bool CheckCollision(float x, float y, float width, float height);
+
 protected:
 	float _x;
 	float _y;
@@ -51,8 +54,10 @@ protected:
 	bool enter;
 	float enterTimeX;
 	float enterTimeY;
+
 	float startX;
 	float startY;
+
 };
 
 #endif

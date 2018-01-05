@@ -44,14 +44,14 @@ Collision(stt, x, y, width, height, tag)
 
 bool Monster1Collision::OnCollisionEnter(string &tag)
 {
-	if (enter == true)
+	if (_tag != "monster3")
 	{
 		if (tag == "bullet")
 		{
 			Active = false;
 		}
 	}
-	return enter;
+	return true;
 }
 
 void Monster1Collision::ImportTarget(int index)

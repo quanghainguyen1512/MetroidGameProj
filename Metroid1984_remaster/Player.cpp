@@ -97,6 +97,72 @@ bool Player::Initialize(LPDIRECT3DDEVICE9 device)
 		}
 	}
 
+	if (!Right_look_up)
+	{
+		Right_look_up = new GameSprite(_spriteManager);
+		if (!Right_look_up->initialize(device, _gDevice->getCharaterTex(), RIGHT_STAND_GAURD_INDEX, STAND_GAURD_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Left_look_up)
+	{
+		Left_look_up = new GameSprite(_spriteManager);
+		if (!Left_look_up->initialize(device, _gDevice->getCharaterTex(), LEFT_STAND_GAURD_INDEX, STAND_GAURD_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Right_move_look)
+	{
+		Right_move_look = new GameSprite(_spriteManager);
+		if (!Right_move_look->initialize(device, _gDevice->getCharaterTex(), RIGHT_MOVE_GAURD_INDEX, MOVE_GAURD_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Left_move_look)
+	{
+		Left_move_look = new GameSprite(_spriteManager);
+		if (!Left_move_look->initialize(device, _gDevice->getCharaterTex(), LEFT_MOVE_GAURD_INDEX, MOVE_GAURD_COUNT))
+		{
+			return false;
+		}
+
+	}
+	if (!Right_jump_look)
+	{
+		Right_jump_look = new GameSprite(_spriteManager);
+		if (!Right_jump_look->initialize(device, _gDevice->getCharaterTex(), RIGHT_JUMP_GAURD_INDEX, JUMP_GAURD_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Left_jump_look)
+	{
+		Left_jump_look = new GameSprite(_spriteManager);
+		if (!Left_jump_look->initialize(device, _gDevice->getCharaterTex(), LEFT_JUMP_GAURD_INDEX, JUMP_GAURD_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Right_move_shoot)
+	{
+		Right_move_shoot = new GameSprite(_spriteManager);
+		if (!Right_move_shoot->initialize(device, _gDevice->getCharaterTex(), RIGHT_MOVE_SHOOT_INDEX, MOVE_SHOOT_COUNT))
+		{
+			return false;
+		}
+	}
+	if (!Left_move_shoot)
+	{
+		Left_move_shoot = new GameSprite(_spriteManager);
+		if (!Left_move_shoot->initialize(device, _gDevice->getCharaterTex(), LEFT_MOVE_SHOOT_INDEX, MOVE_SHOOT_COUNT))
+		{
+			return false;
+		}
+	}
+
 	if (CreateBullet() == false)
 		return false;
 
@@ -133,6 +199,12 @@ void Player::Update(float gameTime)
 		if (Is_jump == true && Is_air == true)
 		{
 			directionY += 0.15;
+			if (HighJump == true)
+			{	
+				hightjumpcount++;
+				if (hightjumpcount==2)
+					directionY -= 1.75;
+			}
 			if (directionY >= 0 && Is_stand == false)
 				Is_fall = true;
 		}
@@ -145,12 +217,23 @@ void Player::Update(float gameTime)
 		{
 			if ((Is_jump == true || Is_air == true) && Is_ground_spin == false && (directionX == 0))
 			{
-				Right_jump->Update(gameTime);
-				spriteID = 0;
-				ActionID = 2;
-				spriteWidth = Right_jump->getWidth();
-				spriteHeight = Right_jump->getHeight();
-				shootable = true;
+				if (Is_jumpgaurd == false)
+				{
+					Right_jump->Update(gameTime);
+					spriteID = 0;
+					ActionID = 2;
+					spriteWidth = Right_jump->getWidth();
+					spriteHeight = Right_jump->getHeight();
+					shootable = true;
+				}
+				else
+				{
+					Right_jump_look->Update(gameTime);
+					spriteID = 5;
+					spriteWidth = Right_jump_look->getWidth();
+					spriteHeight = Right_jump_look->getHeight();
+					shootable = true;
+				}
 				//Is_air = true;
 			}
 			else if (Is_fall == true && directionX != 0 && Is_air == true && directionY > 0)
@@ -174,33 +257,77 @@ void Player::Update(float gameTime)
 			}
 			else if (directionX != 0 && Is_air == false)
 			{
-				Right_move->Update(gameTime);
-				spriteID = 3;
-				ActionID = 0;
-				spriteWidth = Right_move->getWidth();
-				spriteHeight = Right_move->getHeight();
-				shootable = true;
+				if (Is_movegaurd == false)
+				{
+					if (OpenFire == false)
+					{
+						Right_move->Update(gameTime);
+						spriteID = 3;
+						ActionID = 0;
+						spriteWidth = Right_move->getWidth();
+						spriteHeight = Right_move->getHeight();
+						shootable = true;
+					}
+					else
+					{
+						Right_move_shoot->Update(gameTime);
+						spriteID = 8;
+						spriteWidth = Right_move_shoot->getWidth();
+						spriteHeight = Right_move_shoot->getHeight();
+						shootable = true;
+					}
+				}
+				else
+				{
+					Right_move_look->Update(gameTime);
+					spriteID = 7;
+					spriteWidth = Right_move_look->getWidth();
+					spriteHeight = Right_move_look->getHeight();
+					shootable = true;
+				}
 			}
 			else if (Is_stand == true)
 			{
-				Right_stand->Update(gameTime);
-				spriteID = 4;
-				ActionID = 3;
-				spriteWidth = Right_stand->getWidth();
-				spriteHeight = Right_stand->getHeight();
-				shootable = true;
+				if (Is_standgaurd == false)
+				{
+					Right_stand->Update(gameTime);
+					spriteID = 4;
+					ActionID = 3;
+					spriteWidth = Right_stand->getWidth();
+					spriteHeight = Right_stand->getHeight();
+					shootable = true;
+				}
+				else
+				{
+					Right_look_up->Update(gameTime);
+					spriteID = 6;
+					spriteWidth = Right_look_up->getWidth();
+					spriteHeight = Right_look_up->getHeight();
+					shootable = true;
+				}
 			}
 		}
 		if (last_directionX == -1)
 		{
 			if ((Is_jump == true || Is_air == true) && Is_ground_spin == false && (directionX == 0))
 			{
-				Left_jump->Update(gameTime);
-				spriteID = 0;
-				ActionID = 2;
-				spriteWidth = Left_jump->getWidth();
-				spriteHeight = Left_jump->getHeight();
-				shootable = true;
+				if (Is_jumpgaurd == false)
+				{
+					Left_jump->Update(gameTime);
+					spriteID = 0;
+					ActionID = 2;
+					spriteWidth = Left_jump->getWidth();
+					spriteHeight = Left_jump->getHeight();
+					shootable = true;
+				}
+				else
+				{
+					Left_jump_look->Update(gameTime);
+					spriteID = 5;
+					spriteWidth = Left_jump_look->getWidth();
+					spriteHeight = Left_jump_look->getHeight();
+					shootable = true;
+				}
 				//Is_air = true;
 			}
 			else if (Is_fall == true && directionX != 0 && Is_air == true && directionY > 0)
@@ -224,25 +351,58 @@ void Player::Update(float gameTime)
 			}
 			else if (directionX != 0 && Is_air == false)
 			{
-				Left_move->Update(gameTime);
-				spriteID = 3;
-				ActionID = 1;
-				spriteWidth = Left_move->getWidth();
-				spriteHeight = Left_move->getHeight();
-				shootable = true;
+				if (Is_movegaurd == false)
+				{
+					if (OpenFire == false)
+					{
+						Left_move->Update(gameTime);
+						spriteID = 3;
+						ActionID = 1;
+						spriteWidth = Left_move->getWidth();
+						spriteHeight = Left_move->getHeight();
+						shootable = true;
+					}
+					else
+					{
+						Left_move_shoot->Update(gameTime);
+						spriteID = 8;
+						spriteWidth = Left_move_shoot->getWidth();
+						spriteHeight = Left_move_shoot->getHeight();
+						shootable = true;
+					}
+				}
+				else
+				{
+					Left_move_look->Update(gameTime);
+					spriteID = 7;
+					spriteWidth = Left_move_look->getWidth();
+					spriteHeight = Left_move_look->getHeight();
+					shootable = true;
+				}
 			}
 			else if (Is_stand == true)
 			{
-				Left_stand->Update(gameTime);
-				spriteID = 4;
-				ActionID = 3;
-				spriteWidth = Left_stand->getWidth();
-				spriteHeight = Left_stand->getHeight();
-				shootable = true;
+				if (Is_standgaurd == false)
+				{
+					Left_stand->Update(gameTime);
+					spriteID = 4;
+					ActionID = 3;
+					spriteWidth = Left_stand->getWidth();
+					spriteHeight = Left_stand->getHeight();
+					shootable = true;
+				}
+				else
+				{
+					Left_look_up->Update(gameTime);
+					spriteID = 6;
+					spriteWidth = Left_look_up->getWidth();
+					spriteHeight = Left_look_up->getHeight();
+					shootable = true;
+				}
 			}
 		}
 		_collisionManager->UpdatePlayerCol(tempx, tempy, spriteWidth, spriteHeight, velocity.x*directionX, velocity.y*directionY);
-
+		_collisionManager->BulletProcess();
 		float remainTimeX = _collisionManager->RemainXtime(position.x, lastWidth, velocity.x*directionX, collisionXTag, MonsterXTag);
 		float remainTimeY = _collisionManager->RemainYtime(position.y, lastHeight, velocity.y*directionY, collisionYTag, MonsterYTag);
 
@@ -268,7 +428,7 @@ void Player::Update(float gameTime)
 			UpdateBehavior();
 		}
 
-		BulletControl();
+		BulletControl(gameTime);
 	}
 }
 
@@ -303,6 +463,26 @@ void Player::Draw(float gameTime)
 			Right_stand->Draw(gameTime, position);
 			break;
 		}
+		case 5:
+		{
+			Right_jump_look->Draw(gameTime, position);
+			break;
+		}
+		case 6:
+		{
+			Right_look_up->Draw(gameTime, position);
+			break;
+		}
+		case 7:
+		{
+			Right_move_look->Draw(gameTime, position);
+			break;
+		}
+		case 8:
+		{
+			Right_move_shoot->Draw(gameTime, position);
+			break;
+		}
 		default:
 			break;
 		}
@@ -335,6 +515,26 @@ void Player::Draw(float gameTime)
 		case 4:
 		{
 			Left_stand->Draw(gameTime, position);
+			break;
+		}
+		case 5:
+		{
+			Left_jump_look->Draw(gameTime, position);
+			break;
+		}
+		case 6:
+		{
+			Left_look_up->Draw(gameTime, position);
+			break;
+		}
+		case 7:
+		{
+			Left_move_look->Draw(gameTime, position);
+			break;
+		}
+		case 8:
+		{
+			Left_move_shoot->Draw(gameTime, position);
 			break;
 		}
 		default:
@@ -428,6 +628,7 @@ void Player::ProcessKey(int keyDown)
 	}break;
 	case UP_ARROW:
 	{
+		shootUP = true;
 		if (Is_ground_spin == true)
 		{
 			Is_ground_spin = false;
@@ -436,10 +637,18 @@ void Player::ProcessKey(int keyDown)
 			spriteHeight = 20;
 			_collisionManager->UpdatePlayerCol(position.x, position.y, spriteWidth, spriteHeight, velocity.x*directionX, velocity.y);
 		}
+		else if (Is_jump == true && Is_air == true && Is_stand == false)
+		{
+			Is_jumpgaurd = true;
+		}
+		else if (directionX==0)
+		{
+			Is_standgaurd = true;
+		}
 	}break;
 	case DOWN_ARROW:
 	{
-		if (Is_ground_spin != true)
+		if (Is_ground_spin != true && !(Is_jump == true && Is_air == true && Is_stand == false))
 		{
 			Is_ground_spin = true;
 			position.y = position.y + 10;
@@ -451,19 +660,24 @@ void Player::ProcessKey(int keyDown)
 		}
 	}break;
 
-	case SPACE_BUTTON:
+	case JUMP_BUTTON:
 	{
-		if (Is_jump == false || directionY > 1|| Is_air==false)
+		if (((Is_jump == false || directionY > 1 || Is_air == false) && Is_ground_spin == false)&&jumpCount==0)
 		{
 			//height_limited = position.y - 50;
-			directionY = -1.75;
+			directionY = -0.25;
 			Is_jump = true;
 			Is_air = true;
 			Is_stand = false;
-			position.y -= 10;
+			position.y -= 5;
+			jumpCount++;
 		}
 		break;
 	}
+	/*case SHOOT_BUTTON:
+	{
+		break;
+	}*/
 	case GOD_MODE:
 	{
 		if (velocity.y <= 0)
@@ -477,6 +691,14 @@ void Player::ProcessKey(int keyDown)
 		directionX = 0;
 		countDown = 2;
 		timeShot = 0;
+		Is_jumpgaurd = false;
+		Is_standgaurd = false;
+		Is_movegaurd = false;
+		shootUP = false;
+		Is_moveshoot = false;
+		jumpCount = 0;
+		HighJump = false;
+		hightjumpcount = 0;
 	}
 	default:
 	{
@@ -496,6 +718,7 @@ void Player::UpdateBehavior()
 			Is_air = false;
 			Is_stand = true;
 			Is_fall = false;
+			Did_jump = false;
 			directionY = 1;
 			//position.y -= 5;
 		}
@@ -512,21 +735,27 @@ void Player::UpdateBehavior()
 	}
 	if (MonsterXTag != "" || MonsterYTag != "")
 	{
-
+		position.x += 16;
 	}
+	MonsterXTag = "";
+	MonsterYTag = "";
 }
 
 void Player::jump()
 {
-	if ( Is_jump==true)
-	{
-		//height_limited = position.y - 50;
-		directionY += -0.75;
-		Is_jump = true;
-		Is_air = true;
-		Is_stand = false;
-		position.y -= 10;
-	}
+	////if (Did_jump == false)
+	//{
+	//	//height_limited = position.y - 50;
+	//	directionY += -1;
+	//	Is_jump = true;
+	//	Is_air = true;
+	//	Is_stand = false;
+	//	position.y -= 10;
+	//	Did_jump = true;
+	//}
+	HighJump = true;
+	//hightjumpcount++;
+
 }
 
 bool Player::CreateBullet()
@@ -537,6 +766,7 @@ bool Player::CreateBullet()
 		if (b->Initialize(_gDevice->device) == false)
 			return false;
 		bulletList.push_back(b);
+		_collisionManager->ImportBulletCollision(i, position.x, position.y, 8, 8);
 	}
 	return true;
 }
@@ -545,33 +775,62 @@ void Player::Shoot()
 {
 	if (shootable == true)
 	{
-		if (timeShot%countDown == 0)
+		if (timeShot == 0)
 		{
-			bulletList[bulletIndex]->SetVector(last_directionX, 0, velocity.x, velocity.y);
+			if (shootUP == false)
+			{
+				bulletList[bulletIndex]->SetVector(last_directionX, 0, velocity.x, velocity.y);
+			}
+			else
+			{
+				bulletList[bulletIndex]->SetVector(0, -1, velocity.x, velocity.y);
+			}
 			if (last_directionX == 1)
+			{
 				bulletList[bulletIndex]->UpdatePosition(position.x + spriteWidth - 5, position.y + 8);
+			}
 			else if (last_directionX == -1)
+			{
 				bulletList[bulletIndex]->UpdatePosition(position.x, position.y + 8);
+			}
 			bulletList[bulletIndex]->Update(0);
 			bulletList[bulletIndex]->active = true;
+			_collisionManager->UpdateBulletCol(bulletIndex, bulletList[bulletIndex]->getPosition().x, bulletList[bulletIndex]->getPosition().y, 0, 0, true);
 			bulletIndex++;
 			if (bulletIndex > 4)
 				bulletIndex = 0;
-
 		}
 		timeShot++;
+		if (timeShot >= countDown)
+		{
+			timeShot = 0;	
+		}
+		
+		//moveShoot();
 	}
 }
 
-void Player::BulletControl()
+void Player::BulletControl(float gameTime)
 {
 	for (int i = 0; i < bulletCount; i++)
 	{
-		if (bulletList[i]->active == true)
+		if (_collisionManager->getBulletActive(i) == true)
 		{
-			bulletList[i]->Update(0);
+			bulletList[i]->Update(gameTime);
+			_collisionManager->UpdateBulletCol(i, bulletList[i]->getPosition().x, bulletList[i]->getPosition().y, 0, 0, true);
+		}
+		else
+		{
+			bulletList[i]->Reset();
+			_collisionManager->UpdateBulletCol(i, bulletList[i]->getPosition().x, bulletList[i]->getPosition().y, 0, 0, false);
 		}
 	}
+	
+	if (OpenFire == true)
+	{
+		Shoot();
+	}
+	
 }
 
 void Player::DrawBullet()
@@ -583,4 +842,45 @@ void Player::DrawBullet()
 			bulletList[i]->Draw(0);
 		}
 	}
+}
+
+void Player::movegaurd()
+{
+	//if (directionX != 0)
+	{
+		shootUP = true;
+		Is_movegaurd = true;
+		//position.y += 2;
+	}
+}
+
+void Player::moveGaurdTerminated()
+{
+	shootUP = false;
+	Is_movegaurd = false;
+	Is_air = false;
+	Is_fall = false;
+	//position.y += 9;
+
+}
+
+void Player::resetHighJump()
+{
+	hightjumpcount = 0;
+	HighJump = false;
+}
+
+void Player::startShoot()
+{
+	OpenFire = true;
+}
+void Player::endShoot()
+{
+	OpenFire = false;
+	timeShot = 0;
+}
+
+void Player::setDirection(int direction)
+{
+	directionX = direction;
 }

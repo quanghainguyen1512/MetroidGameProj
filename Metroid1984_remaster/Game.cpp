@@ -155,8 +155,10 @@ void Game::ProcessInput()
 		player->ProcessKey(DOWN_ARROW);
 	else if (keyBoard->IsKeyDown(DIK_F))
 		player->ProcessKey(GOD_MODE);
-	else if (keyBoard->IsKeyDown(DIK_SPACE))
-		player->ProcessKey(SPACE_BUTTON);
+	else if (keyBoard->IsKeyDown(DIK_X))
+		player->ProcessKey(JUMP_BUTTON);
+	else if (keyBoard->IsKeyDown(DIK_Z))
+		player->ProcessKey(SHOOT_BUTTON);
 	else
 		player->ProcessKey(UNKEY);
 }

@@ -3,8 +3,8 @@
 Bullet::Bullet(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, SpriteManager* spritemanager, GraphicsDevice* gDevice):
 GameObject(x,y,rotation,speed,maxSpeed,collisionManager,spritemanager,gDevice)
 {
-	velocity.x = 4;
-	velocity.y = 4;
+	velocity.x = 0.25;
+	velocity.y = 0.25;
 	startX = x;
 	startY = y;
 	activeTime = 0;
@@ -32,10 +32,10 @@ void Bullet::Update(float gameTime)
 {
 	if (active == true)
 	{
-		position.x += vectorX*(velocity.x + vx0);
-		position.y += vectorY*(velocity.y + vy0);
+		position.x += vectorX*(velocity.x + vx0)*gameTime;
+		position.y += vectorY*(velocity.y + vy0)*gameTime;
 		//_collisionManager->UpdateMonsterCol();
-		if (activeTime == 4)
+		if (activeTime == 7)
 		{
 			Reset();
 		}

@@ -85,8 +85,8 @@ float CollisionManager::RemainYtime(float y0, float height, float VelocityY, str
 	}
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
-		float result = MonsterObject[MonsterList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
-		if (MonsterObject[MonsterList[i]]->OnCollisionEnter(MonsterTag) == true)
+		//float result = MonsterObject[MonsterList[i]]->YCollisionTime(y0, height, PlayerCol, VelocityY);
+		if (MonsterObject[MonsterList[i]]->CheckCollision(PlayerCol->getX(), PlayerCol->getY(), PlayerCol->getWidth(), PlayerCol->getHeight()) == true && MonsterObject[MonsterList[i]]->Active==true)
 		{
 			MonsterTag = MonsterObject[MonsterList[i]]->getTag();
 		}
@@ -148,8 +148,8 @@ float CollisionManager::RemainXtime(float x0, float width, float VelocityX, stri
 	}
 	for (int i = 0; i < MonsterList.size(); i++)
 	{
-		float result = MonsterObject[MonsterList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
-		if (MonsterObject[MonsterList[i]]->OnCollisionEnter(MonsterTag) == true)
+		//float result = MonsterObject[MonsterList[i]]->XCollisionTime(x0, width, PlayerCol, VelocityX);
+		if (MonsterObject[MonsterList[i]]->CheckCollision(PlayerCol->getX(), PlayerCol->getY(), PlayerCol->getWidth(), PlayerCol->getHeight()) == true && MonsterObject[MonsterList[i]]->Active == true)
 		{
 			MonsterTag = MonsterObject[MonsterList[i]]->getTag();
 		}
@@ -384,4 +384,64 @@ void CollisionManager::ReadRelation(string fileName)
 			MonsterObject[monsterIndex]->SetLimitation(x, y, width, height);
 		}
 	}
+}
+
+void CollisionManager::ImportBulletCollision(int stt, float x, float y, float width, float height)
+{
+	BulletCollision *b = new BulletCollision(stt, x, y, width, height, "bullet");
+	BulletList.push_back(b);
+}
+
+void CollisionManager::UpdateBulletCol(int stt, float x, float y, float velocityX, float velocityY,bool active)
+{
+	BulletList[stt]->Update(x, y, 8, 8, velocityX, velocityY);
+	BulletList[stt]->Active = active;
+}
+
+void CollisionManager::BulletProcess()
+{
+	string weapon = "bullet";
+	for (int i = 0; i < MonsterList.size(); ++i)
+	{
+		for (int e = 0; e < 5; e++)
+		{
+			if (BulletList[e]->Active == true)
+			{
+				int x = MonsterObject[MonsterList[i]]->getX();
+				int y = MonsterObject[MonsterList[i]]->getY();
+				int width = MonsterObject[MonsterList[i]]->getWidth();
+				int height = MonsterObject[MonsterList[i]]->getHeight();
+				string tag = MonsterObject[MonsterList[i]]->getTag();
+
+				if (BulletList[e]->CheckCollision(x, y, width, height) == true)
+				{
+					BulletList[e]->OnCollisionEnter(tag);
+					MonsterObject[MonsterList[i]]->OnCollisionEnter(weapon);
+					break;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		int x = BulletList[i]->getX();
+		int y = BulletList[i]->getY();
+		int width = BulletList[i]->getWidth();
+		int height = BulletList[i]->getHeight();
+		string tag = BulletList[i]->getTag();
+		for (int e = 0; e < CollisionList.size(); e++)
+		{
+			if (BrickObject[CollisionList[e]]->CheckCollision(x, y, width, height) == true)
+			{
+				BulletList[i]->OnCollisionEnter(tag);
+				break;
+			}
+		}
+	}
+}
+
+bool CollisionManager::getBulletActive(int i)
+{
+	return BulletList[i]->Active;
 }
