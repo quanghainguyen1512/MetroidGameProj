@@ -346,6 +346,16 @@ void CollisionManager::MonsterAndBrick()
 
 				MonsterObject[MonsterList[i]]->LeftRight(x, y, width, height);
 			}
+			else if (MonsterObject[MonsterList[i]]->getTag() == "monster4")
+			{
+				int e = MonsterObject[MonsterList[i]]->count;
+				int x = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getX();
+				int y = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getY();
+				int width = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getWidth();
+				int height = BrickObject[MonsterObject[MonsterList[i]]->ActivateBrickIndex[e - 1]]->getHeight();
+
+				MonsterObject[MonsterList[i]]->Infinity(x, y, width, height,PlayerCol->getX(),PlayerCol->getY());
+			}
 		}
 	}
 }

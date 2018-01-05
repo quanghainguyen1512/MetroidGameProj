@@ -126,3 +126,10 @@
 125 83 261 1 1 monster3 82
 126 87 265 1 1 monster3 94
 127 85 268 1 1 monster3 82
+128 71 18 1 1 monster4 0
+129 83 18 1 1 monster4 0
+130 99 18 1 1 monster4 0
+131 147 63 1 1 monster4 0
+132 138 63 1 1 monster4 0
+133 133 63 1 1 monster4 0
+134 140 199 1 1 monster4 0

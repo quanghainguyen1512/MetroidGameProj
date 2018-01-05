@@ -13,7 +13,8 @@ Collision::Collision(int stt,float x, float y, float width, float height, string
 
 	centerX = x + width / 2;
 	centerY = y + height / 2;
-
+	startX = x;
+	startY = y;
 	Active = true;
 }
 

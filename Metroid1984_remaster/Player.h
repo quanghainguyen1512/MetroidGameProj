@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include"GamePlayObject.h"
+#include"Bullet.h"
 
 class Player : public GameObject
 {
@@ -20,11 +21,14 @@ public:
 	bool Initialize(LPDIRECT3DDEVICE9 device);
 	void Update(float gameTime);
 	void Draw(float gameTime);
-	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
-
 	void OnKeyDown(int keyCode);
 	void OnKeyUp(int keyCode);
 	void ProcessKey(int keyDown);
+	
+	bool CreateBullet();
+	void Shoot();
+	void BulletControl();
+	void DrawBullet();
 
 	bool InitializeFlag();
 	D3DXVECTOR3 GetPosition();
@@ -66,13 +70,19 @@ protected:
 	int spriteHeight;
 	int lastWidth;
 	int lastHeight;
-
 	string collisionXTag;
 	string collisionYTag;
 	string MonsterXTag;
 	string MonsterYTag;
 
 	int height_limited;
+
+	vector<Bullet*> bulletList;
+	int bulletCount;
+	bool shootable;
+	int bulletIndex;
+	int countDown = 5;
+	int timeShot = 0;
 };
 
 #endif

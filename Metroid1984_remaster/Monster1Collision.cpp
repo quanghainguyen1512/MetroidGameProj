@@ -32,6 +32,14 @@ Collision(stt, x, y, width, height, tag)
 		minX = mode * 16;
 		maxX = mode * 16;
 	}
+	else if (tag == "monster4")
+	{
+		_velocityX = 1;
+		_velocityY = 3;
+		vectorX = 0;
+		vectorY = 0;
+		attack = false;
+	}
 }
 
 bool Monster1Collision::OnCollisionEnter(string &tag)
@@ -67,6 +75,10 @@ void Monster1Collision::Orbit(int x, int y, int width, int height, int TargetX, 
 	else if (_tag == "monster3")
 	{
 		LeftRight(x, y, width, height);
+	}
+	else if (_tag == "monster4")
+	{
+		Infinity(x, y, width, height, TargetX, TargerY);
 	}
 }
 
@@ -190,6 +202,52 @@ void Monster1Collision::LeftRight(int x, int y, int width, int height)
 	else if (_x + _width >= maxX)
 	{
 		vectorX = -1;
+	}
+	_velocityX = abs(_velocityX)*vectorX;
+	_velocityY = abs(_velocityY)*vectorY;
+}
+
+void Monster1Collision::Infinity(int x, int y, int width, int height, int targetX, int targetY)
+{
+	if (sqrt(pow((_x - targetX), 2) + pow((_y - targetY), 2)) <= 175 && attack == false)
+	{
+		attack = true;
+	}
+	if (attack == true)
+	{
+		if (targetX > _x)
+		{
+			vectorX = 1;
+		}
+		else if (targetX < _x)
+		{
+			vectorX = -1;
+		}
+		else
+		{
+			vectorX = 0;
+		}
+		vectorY = 1;
+		if (_y + _height >= y)
+		{
+			_y = y - _height;
+			vectorY = 0;
+			timeCount++;
+			if (timeCount % 10 == 0)
+			{
+				vectorY = -1;
+			}
+		}
+		else if (vectorY == -1 && _y <= startY)
+		{
+			_y = startY;
+			vectorY = 0;
+			timeCount++;
+			if (timeCount % 10 == 0)
+			{
+				vectorY = 1;
+			}
+		}
 	}
 	_velocityX = abs(_velocityX)*vectorX;
 	_velocityY = abs(_velocityY)*vectorY;

@@ -21,10 +21,10 @@ public:
 	void Orbit(int x, int y, int width, int height, int TargerX, int TargetY);
 	
 	void Climb(int x, int y, int width, int height);
-	void Fall(int x, int y, int width, int height, int targetX, int targety);
+	void Fall(int x, int y, int width, int height, int targetX, int targetY);
 	void LeftRight(int x, int y, int width, int height);
-	void Infinity(int x, int y, int width, int height);
-	void Follow(int x, int y, int width, int height);
+	void Infinity(int x, int y, int width, int height, int targetX, int targetY);
+	//void Follow(int x, int y, int width, int height);
 
 	int GetActiveArea(int index);
 

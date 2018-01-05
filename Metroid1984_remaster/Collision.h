@@ -51,7 +51,8 @@ protected:
 	bool enter;
 	float enterTimeX;
 	float enterTimeY;
-
+	float startX;
+	float startY;
 };
 
 #endif
