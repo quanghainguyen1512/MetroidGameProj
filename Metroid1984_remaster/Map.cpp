@@ -2,52 +2,20 @@
 
 using namespace std;
 
-Map::Map(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, SpriteManager* spriteManager) :
-GameObject(x, y, rotation, speed, maxSpeed, collisionManager,spriteManager)
+Map::Map(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, SpriteManager* spriteManager, GraphicsDevice* gDevice) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager, spriteManager, gDevice)
 {
 
 }
 
 bool Map::Initialize(LPDIRECT3DDEVICE9 device)
 {
-	if (CreateTexture(device, "a2.png") == false)
-		return false;
-
-	halfofmap_left = new Field(0, 16, 0, 0, 0, NULL, "halfofmap_left.txt", tex, _spriteManager);
+	halfofmap_left = new Field(16, 16, 0, 0, 0, NULL, "halfofmap_left2.txt", _spriteManager, _gDevice);
 	if (halfofmap_left->Initialize(device) == false)
 	{
 		return false;
 	}
 	IsInitialize = true;
-	return true;
-}
-
-bool Map::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
-{
-	D3DXIMAGE_INFO info;
-	HRESULT result = D3DXGetImageInfoFromFile(file.c_str(), &info);
-
-	if (!SUCCEEDED(D3DXCreateTextureFromFileEx(
-		device,
-		file.c_str(),
-		info.Width,
-		info.Height,
-		1,
-		D3DUSAGE_DYNAMIC,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(0, 0, 0),
-		&info,
-		NULL,
-		&tex)))
-	{
-		std::string s = "Make sure the file exist and path is right. Requested Image: " + file;
-		MessageBox(NULL, s.c_str(), NULL, NULL);
-		return false;
-	}
-	graphic = device;
 	return true;
 }
 
@@ -57,14 +25,20 @@ void Map::Draw(float gameTime)
 	halfofmap_left->Draw(gameTime);
 }
 
-void Map::setLimitation(int x, int y, int width, int height)
+void Map::setLimitation(int camX, int camY, int width, int height, int playerX, int playerY)
 {
-	halfofmap_left->setLimitation(x, y, width, height);
+	halfofmap_left->setLimitation(camX, camY, width, height);
+	_collisionManager->SetLimitation(playerX, playerY);
 }
 
 void Map::Update(float gameTime)
 {
 
+}
+
+void Map::ImportCollisionManager(CollisionManager* c)
+{
+	_collisionManager = c;
 }
 
 Map::~Map()

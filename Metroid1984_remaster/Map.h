@@ -11,17 +11,25 @@ using namespace std;
 class Map :public GameObject
 {
 public:
-	Map(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager,SpriteManager* spriteManager);
+	Map(
+		float x, 
+		float y, 
+		float rotation, 
+		float speed, 
+		float maxSpeed, 
+		CollisionManager* collisionManager, 
+		SpriteManager* spriteManager, 
+		GraphicsDevice* gDevice);
 	~Map();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
 	void Update(float gameTime);
 	void Draw(float gameTime);
-	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	bool IsInitialize = false;
 
-	void setLimitation(int x, int y, int width, int height);
+	void setLimitation(int x, int y, int width, int height, int playerX, int playerY);
+	void ImportCollisionManager(CollisionManager* c);
 
 protected:
 	Field* halfofmap_left;

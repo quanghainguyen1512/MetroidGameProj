@@ -10,6 +10,16 @@ Collision::Collision(int stt,float x, float y, float width, float height, string
 	_height = height;
 	_tag = tag;
 	_stt = stt;
+
+	centerX = x + width / 2;
+	centerY = y + height / 2;
+
+	startX = x;
+	startY = y;
+
+	Active = true;
+	_velocityX = 0;
+	_velocityY = 0;
 }
 
 void Collision::Update(float x, float y, float width, float height, float velocityx, float velocityy)
@@ -20,6 +30,9 @@ void Collision::Update(float x, float y, float width, float height, float veloci
 	_height = height;
 	_velocityX = velocityx;
 	_velocityY = velocityy;
+
+	centerX = (_x + (_x + _width)) / 2;
+	centerY = (_y + (_y + _height)) / 2;
 }
 
 //normalx va normaly su dung cho cac kieu va cham khac nhu phan xa hay truot
@@ -121,77 +134,118 @@ float Collision::SweptAABB(Collision* P, float &normalx, float &normaly)
 	}
 }
 
-float Collision::YCollisionTime(float y0,float height, Collision* P, float VelocityY)
+float Collision::YCollisionTime(float y0, float height, Collision* P, float VelocityY)
 {
-	if (P->_x < _x&&_x < P->_x + P->_width ||
-		P->_x < _x + _width&&_x + _width < P->_x + P->_width ||
-		_x < P->_x&&P->_x < _x + _width)
+	if (!(P->_x + P->_width<_x || P->_x>_x + _width) &&
+		!(P->_y + P->_height<_y || P->_y>_y + _height))
 	{
+		enter = true;
 		if (VelocityY > 0)
 		{
-			if (y0 + height <= _y&&_y < P->_y + P->_height)
+			if (y0 + height <= _y + _velocityY)
 			{
-				return (P->_y + P->_height - _y) / VelocityY;
+				enterTimeY = (P->_y + P->_height - (_y + _velocityY)) / VelocityY;
+				return enterTimeY;
 			}
 		}
 		else if (VelocityY < 0)
 		{
-			if (P->_y + P->_height < _y + _height&&_y + _height <= y0)
+			if (_y + _height + _velocityY <= y0)
 			{
-				return(_y + _height - (P->_height + P->_y)) / (-VelocityY);
+				enterTimeY = (P->_y - (_height + _y + _velocityY)) / (VelocityY);
+				return enterTimeY;
 			}
 		}
 	}
 	return 0;
 }
 
-float Collision::YCollisionTime(float y0, float yn, float Velocity, float height)
+float Collision::XCollisionTime(float x0, float width, Collision* P, float VelocityX)
 {
-	return 0;
-}
-
-float Collision::XCollisionTime(float x0,float width, Collision* P, float VelocityX)
-{
-	if (P->_y < _y&&_y < P->_y + P->_height ||
-		P->_y < _y + _height &&_y + _height < P->_y + P->_height ||
-		_y < P->_y && P->_y < _y + _height)
+	if (!(P->_x + P->_width<_x || P->_x>_x + _width) && 
+		!(P->_y + P->_height<_y || P->_y>_y + _height))
 	{
+		enter = true;
 		if (VelocityX > 0)
 		{
-			if (x0 + width <= _x && _x < P->_x + P->_width)
+			if (x0 <=_x+_velocityX)
 			{
-				return ((P->_x + P->_width) - _x) / (VelocityX);
+				enterTimeX = ((P->_x + P->_width) - (_x + _velocityX)) / (VelocityX);
+				return enterTimeX;
 			}
 		}
 		else if (VelocityX < 0)
 		{
-			if (P->_x < _x + _width && _x + _width <= x0)
+			if (_x + _width+_velocityX <= x0+width)
 			{
-				return ((_x + _width) - P->_x) / (-VelocityX);
+				enterTimeX = ((_x + _width + _velocityX) - P->_x) / (-VelocityX);
+				return enterTimeX;
 			}
 		}
 	}
 	return 0;
 }
-float Collision::XCollisionTime(float x0, float xn, float VelocitX, float width)
-{
-	return 0;
-}
 
-int Collision::SizeBySize(Collision* P)
+bool Collision::OnCollisionEnter(string &tag)
 {
-	if ((P->_y > _y && P->_y < _y + _height) || P->_y < _y && (P->_y + _height >= _y + _height))
-	{
-		if (_x<P->_x&&_x + _width>P->_x)
-			if ((_x + _width - P->_x) < (P->_x - _x))
-				return 1;
-			else
-				return 2;
-	}
-	return 0;
+	return false;
 }
 
 string Collision::getTag()
 {
 	return _tag;
+}
+
+int Collision::getX()
+{
+	return _x;
+}
+int Collision::getY()
+{
+	return _y;
+}
+int Collision::getHeight()
+{
+	return _height;
+}
+int Collision::getWidth()
+{
+	return _width;
+}
+void Collision::ImportTarget(int target){}
+
+void Collision::reset()
+{
+	enterTimeX = 0;
+	enterTimeY = 0;
+	enter = false;
+}
+
+int Collision::CheckCollision(float x, float y, float width, float height)
+{
+	if (!(_y + _height<y || _y>y + height) && !(_x + _width<x || _x>x + width))
+	{
+		if (x + width <= _x + _width)
+		{
+			CollisionDirection = 1;
+			return 1;
+		}
+		else if (x >= _x)
+		{
+			CollisionDirection = 2;
+			return 2;
+		}
+	}
+	CollisionDirection = 0;
+	return 0;
+}
+
+int Collision::getCollisionDirection()
+{
+	return CollisionDirection;
+}
+
+Collision::~Collision()
+{
+
 }

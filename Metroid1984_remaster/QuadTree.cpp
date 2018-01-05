@@ -46,6 +46,7 @@ void QuadTree::Import(string str)
 	else if (a[1] == ']')
 	{
 		list.push_back(int(a[0]) - 48);
+		Is_parent = true;
 	}
 	else if (a[1] == '}')
 	{
@@ -86,7 +87,7 @@ void QuadTree::addToNode(int index, string value)
 				return;
 			else
 			{
-				Is_parent = true;
+				//Is_parent = true;
 				node0->Import(value);
 			}
 		}
@@ -105,7 +106,7 @@ void QuadTree::addToNode(int index, string value)
 				return;
 			else
 			{
-				Is_parent = true;
+				//Is_parent = true;
 				node1->Import(value);
 			}
 		}
@@ -124,7 +125,7 @@ void QuadTree::addToNode(int index, string value)
 				return;
 			else
 			{
-				Is_parent = true;
+				//Is_parent = true;
 				node2->Import(value);
 			}
 		}
@@ -143,7 +144,7 @@ void QuadTree::addToNode(int index, string value)
 				return;
 			else
 			{	
-				Is_parent = true;
+				//Is_parent = true;
 				node3->Import(value);
 			}
 		}
@@ -160,6 +161,10 @@ void QuadTree::addToNode(int index, string value)
 
 void QuadTree::Load(vector<int> &listOut, int CamX, int CamY, int CamWidth, int CamHeight)
 {
+	if (value != -1)
+	{
+		listOut.push_back(value);
+	}
 	if (Is_parent == true || value == -1)
 	{
 		bool left_right = (CamX < (_x + _width / 2) && (_x + _width / 2) < CamX + CamWidth);
@@ -234,21 +239,90 @@ void QuadTree::Load(vector<int> &listOut, int CamX, int CamY, int CamWidth, int 
 			if (node1)
 				node1->Load(listOut, CamX, CamY, CamWidth, CamHeight);
 		}
+		for (int i = 0; i < list.size(); i++)
+		{
+			listOut.push_back(list[i]);
+		}
 
-		if ((_x < CamX && (_x + _width) < (CamX + CamWidth)) &&
-			(_y < CamY && (_y + _height) < (CamY + CamHeight)))
-			getList(listOut);
+	}
+	if ((_x < CamX && (_x + _width) < (CamX + CamWidth)) &&
+		(_y < CamY && (_y + _height) < (CamY + CamHeight)))
+		getList(listOut);
 
+	/*
+	/*else
+	{
+	listOut.push_back(value);
+	}*/
+}
+
+void QuadTree::Load2(vector<int> &listOut, int CamX, int CamY, int CamWidth, int CamHeight)
+{
+	bool flag0=false;
+	bool flag1 = false;
+	bool flag2 = false;
+	bool flag3 = false;
+	if (node0)
+	{
+		if (node0->_x <= CamX&&CamX < node0->_x + node0->_width)
+		{
+			if (node0->_x < CamX + CamWidth&&CamX + CamWidth <= node0->_x + node0->_width)
+			{
+				flag0 = true;
+				node0->Load2(listOut, CamX, CamY, CamWidth, CamHeight);
+			}
+		}
+	}
+	if (node1)
+	{
+		if (node1->_x <= CamX&&CamX < node1->_x + node1->_width)
+		{
+			if (node1->_x < CamX + CamWidth&&CamX + CamWidth <= node1->_x + node1->_width)
+			{
+				flag1 = true;
+				node1->Load2(listOut, CamX, CamY, CamWidth, CamHeight);
+			}
+		}
+	}
+	if (node2)
+	{
+		if (node2->_x <= CamX&&CamX < node2->_x + node2->_width)
+		{
+			if (node2->_x < CamX + CamWidth&&CamX + CamWidth <= node2->_x + node2->_width)
+			{
+				flag2 = true;
+				node2->Load2(listOut, CamX, CamY, CamWidth, CamHeight);
+			}
+		}
+	}
+	if (node3)
+	{
+		if (node3->_x <= CamX&&CamX < node3->_x + node3->_width)
+		{
+			if (node3->_x < CamX + CamWidth&&CamX + CamWidth <= node3->_x + node3->_width)
+			{
+				flag3 = true;
+				node3->Load2(listOut, CamX, CamY, CamWidth, CamHeight);
+			}
+		}
+	}
+
+	if (flag0 == false &&
+		flag1 == false &&
+		flag2 == false &&
+		flag3 == false)
+	{
+		getList(listOut);
+	}
+	else
+	{
 		for (int i = 0; i < list.size(); i++)
 		{
 			listOut.push_back(list[i]);
 		}
 	}
-	else
-	{
-		listOut.push_back(value);
-	}
 }
+
 
 int QuadTree::getValue()
 {
@@ -256,26 +330,22 @@ int QuadTree::getValue()
 }
 void QuadTree::getList(vector<int> &v)
 {
-	if (Is_parent == true || value == -1)
+	for (int i = 0; i < list.size(); i++)
 	{
-		for (int i = 0; i < list.size(); i++)
-		{
-			v.push_back(list[i]);
-		}
+		v.push_back(list[i]);
+	}
 
-		if (node0)
-			node0->getList(v);
-		if (node1)
-			node1->getList(v);
-		if (node2)
-			node2->getList(v);
-		if (node3)
-			node3->getList(v);
-	}
-	else
-	{
+	if (node0)
+		node0->getList(v);
+	if (node1)
+		node1->getList(v);
+	if (node2)
+		node2->getList(v);
+	if (node3)
+		node3->getList(v);
+
+	if (value != -1)
 		v.push_back(value);
-	}
 }
 
 QuadTree::~QuadTree()

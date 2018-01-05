@@ -10,21 +10,21 @@ using namespace std;
 class Field :public GameObject
 {
 public:
-	Field(float x, 
-		  float y, 
-		  float rotation, 
-		  float speed, 
-		  float maxSpeed, 
-		  CollisionManager* collisionManager, 
-		  std::string file, 
-		  LPDIRECT3DTEXTURE9 SourceTex, 
-		  SpriteManager* spriteManager);
+	Field(
+		float x,
+		float y,
+		float rotation,
+		float speed,
+		float maxSpeed,
+		CollisionManager* collisionManager,
+		std::string file,
+		SpriteManager* spriteManager,
+		GraphicsDevice* gDevice);
 	~Field();
 
 	bool Initialize(LPDIRECT3DDEVICE9 device);
 	void Update(float gameTime);
 	void Draw(float gameTime);
-	bool CreateTexture(LPDIRECT3DDEVICE9 device, std::string file);
 
 	bool IsInitialize = false;
 

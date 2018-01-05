@@ -11,6 +11,8 @@
 #include"Map.h"
 #include"CollisionManager.h"
 #include"QuadTree.h"
+#include"MonsterManager.h"
+#include"DoorManager.h"
 
 #define KEYBOARD_BUFFER_SIZE 1024
 
@@ -34,7 +36,8 @@ private:
 
 	int _width;
 	int _height;
-
+	bool Auto = false;
+	bool AutoPlayer = false;
 	float _gameTime;
 
 	Player* player;
@@ -43,8 +46,6 @@ private:
 
 	Camera* camera;
 
-	//BackGround* backGround;
-
 	Map* map;
 
 	CollisionManager* collisionManager;
@@ -52,6 +53,11 @@ private:
 	SpriteManager* spriteManager;
 
 	QuadTree* quadTree;
+
+	MonsterManager* monsterManager;
+
+	DoorManager* doorManager;
+
 };
 
 #endif GAME_H

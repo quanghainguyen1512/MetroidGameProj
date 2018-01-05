@@ -77,14 +77,54 @@ int KeyBoard::IsKeyDown(int KeyCode)
 	return(_keyStates[KeyCode] & 0x80) > 0;
 }
 
-void KeyBoard::OnKeyUp(int KeyCode) { }
+void KeyBoard::OnKeyUp(int KeyCode) 
+{
+	switch (KeyCode)
+	{
+	case DIK_UP:
+	{
+		_player->moveGaurdTerminated();
+		break;
+	}
+	case DIK_Z:
+	{
+		//_player->moveShootTerminated();
+		_player->endShoot();
+	}
+	case DIK_LEFT:
+	case DIK_RIGHT:
+	{
+		_player->setDirection(0);
+		break;
+	}
+	case DIK_X:
+	{
+		_player->resetHighJump();
+		break;
+	}
+	default:
+		break;
+	}
+}
 void KeyBoard::OnKeyDown(int KeyCode)
 {
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
+	case DIK_X:
 	{
 		_player->jump();
+		break;
+	}
+	case DIK_Z:
+	{
+		/*_player->moveShoot();
+		_player->movegaurd();*/
+		_player->startShoot();
+		break;
+	}
+	case DIK_UP:
+	{
+		_player->movegaurd();
 		break;
 	}
 	}

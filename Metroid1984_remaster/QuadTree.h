@@ -19,6 +19,8 @@ public:
 	void Load(vector<int> &listOut, int CamX, int CamY, int CamWidth, int CamHeight);
 	void addToNode(int index, string value);
 
+	void Load2(vector<int> &listOut, int CamX, int CamY, int CamWidth, int CamHeight);
+
 	int getValue();
 	void getList(vector<int> &v);
 

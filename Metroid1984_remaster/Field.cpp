@@ -2,11 +2,10 @@
 
 using namespace std;
 
-Field::Field(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, std::string file, LPDIRECT3DTEXTURE9 SourceTex, SpriteManager* spriteManager) :
-GameObject(x, y, rotation, speed, maxSpeed, collisionManager,spriteManager)
+Field::Field(float x, float y, float rotation, float speed, float maxSpeed, CollisionManager* collisionManager, std::string file, SpriteManager* spriteManager, GraphicsDevice* gDevice) :
+GameObject(x, y, rotation, speed, maxSpeed, collisionManager,spriteManager,gDevice)
 {
 	fileName = file;
-	tex = SourceTex;
 	count = 0;
 }
 
@@ -15,11 +14,6 @@ bool Field::Initialize(LPDIRECT3DDEVICE9 device)
 	graphic = device;
 	if (createStringMap() == false)
 		return false;
-	return true;
-}
-
-bool Field::CreateTexture(LPDIRECT3DDEVICE9 device, std::string file)
-{
 	return true;
 }
 
@@ -40,7 +34,7 @@ bool Field::createStringMap()
 void Field::Draw(float gameTime)
 {
 	brick = new GameSprite(_spriteManager);
-	if (brick->initialize(graphic, tex, BRICK, 1))
+	if (brick->initialize(graphic, _gDevice->getBrickTex(), BRICK, 1))
 	{
 		int x = _start_x - position.x;
 		int y = _start_y - position.y;
@@ -322,6 +316,11 @@ void Field::Draw(float gameTime)
 				case 'T':
 				{
 					brick->Draw(0, 848, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
+					break;
+				}
+				case'U':
+				{
+					brick->Draw(0, 864, 16, 16, D3DXVECTOR3(j * 16 + position.x, i * 16 + position.y, 0));
 					break;
 				}
 				case '0':

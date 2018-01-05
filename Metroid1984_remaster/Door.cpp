@@ -52,6 +52,11 @@ void Door::Update(float gameTime)
 		active = true;
 		break;
 	}
+	case 3:
+	{
+		leftdestroy = true;
+		rightdestroy = true;
+	}
 
 	default:
 		break;
@@ -69,9 +74,9 @@ void Door::Draw(float gameTime)
 		}
 		else
 		{
-			if (rightdestroy == true)
+			if (rightdestroy == true && leftdestroy != true)
 				LeftDoor->Draw(gameTime, D3DXVECTOR3(position.x + 8, position.y, 0));
-			if (leftdestroy == true)
+			if (leftdestroy == true && rightdestroy != true)
 				RightDoor->Draw(gameTime, D3DXVECTOR3(position.x + 48, position.y, 0));
 		}
 	}

@@ -1,0 +1,6 @@
+0 antijump 37 206 2 2 200
+1 antijump 42 206 2 2 198
+2 antistand 28 208 4 1 209
+3 antistand 84 203 8 1 187
+4 antistand 132 208 8 1 2
+5 antistand 52 23 9 1 51

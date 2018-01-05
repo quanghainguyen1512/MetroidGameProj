@@ -33,6 +33,7 @@ bool SpriteManager::Initialize(string filepath)
 		Coordinate* coordinate = new Coordinate(x, y, 0, 0, width, height);
 		_ListCoordinate.push_back(coordinate);
 	}
+
 	return true;
 }
 Coordinate* SpriteManager::getCoordinate(int index)

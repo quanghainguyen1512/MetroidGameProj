@@ -1,6 +1,7 @@
 #ifndef SPRITEMANAGER_H
 #define SPRITEMANAGER_H
 
+#include"DataSet.h"
 #include"Coordinate.h"
 #include<vector>
 #include<string>

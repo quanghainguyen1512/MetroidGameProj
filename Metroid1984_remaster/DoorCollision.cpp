@@ -33,16 +33,24 @@ bool DoorCollision::OnCollisionEnter(string &tag)
 	}
     if (tag == "player")
 	{
-		Active = false;
+//		Active = false;
+		RightDestroy = true; 
+		LeftDestroy = true;
+		GetThrough = true;
 	}
 	return true;
 }
 
 int DoorCollision::getST()
 {
+	if (LeftDestroy == true &&
+		RightDestroy == true)
+	{
+		return 3;
+	}
 	if (LeftDestroy == true)
 		return 1;
-	else if (RightDestroy == true)
+	if (RightDestroy == true)
 		return 2;
 	return 0;
 }
